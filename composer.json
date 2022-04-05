@@ -1,6 +1,6 @@
 {
   "name": "remls/hijri-date",
-  "description": "Adds helpers to manage Hijri dates in Dhivehi.",
+  "description": "Laravel helper package for Hijri dates. Supports displaying dates in Dhivehi, Arabic and English.",
   "type": "library",
   "license": "MIT",
   "authors": [
