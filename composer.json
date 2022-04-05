@@ -1,0 +1,28 @@
+{
+  "name": "remls/hijri-date",
+  "description": "Adds helpers to manage Hijri dates in Dhivehi.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Adam Raaif Nasheed",
+      "email": "adam.raaif.nasheed7@gmail.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Remls\\HijriDate\\": "src"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Remls\\HijriDate\\HijriDateServiceProvider"
+      ]
+    },
+    "aliases": {
+      "HijriDate": "Remls\\HijriDate\\Facades\\HijriDate"
+    }
+  }
+}
