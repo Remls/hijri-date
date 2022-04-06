@@ -72,3 +72,14 @@ request()->validate([
     'your_hijri_date_field' => ['required', new ValidHijriDate],
 ]);
 ```
+
+# Further improvements
+
+- Configure default locale
+- getEstimateFromGregorian(): use Carbon::parse if string is input
+- subDays()
+- Support more date formats
+- Translation improvements
+  - Customizable month strings
+  - Validation error message
+  - Support more languages
