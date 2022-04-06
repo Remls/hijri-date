@@ -73,7 +73,7 @@ request()->validate([
 ]);
 ```
 
-# Further improvements
+## Further improvements
 
 - Configure default locale
 - getEstimateFromGregorian(): use Carbon::parse if string is input
