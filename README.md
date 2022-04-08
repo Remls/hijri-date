@@ -75,11 +75,14 @@ request()->validate([
 
 ## Further improvements
 
-- Configure default locale
+- Configuration:
+  - default locale
+  - max/min year (would need to change Rule)
 - getEstimateFromGregorian(): use Carbon::parse if string is input
 - subDays()
+- Comparison methods
 - Support more date formats
-- Translation improvements
+- Translations:
   - Customizable month strings
-  - Validation error message
+  - Customizable validation error message
   - Support more languages
