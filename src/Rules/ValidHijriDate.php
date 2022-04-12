@@ -4,6 +4,7 @@ namespace Remls\HijriDate\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use Remls\HijriDate\HijriDate as HijriDateClass;
+use InvalidArgumentException;
 
 class ValidHijriDate implements Rule
 {
@@ -26,7 +27,12 @@ class ValidHijriDate implements Rule
      */
     public function passes($attribute, $value)
     {
-        return HijriDateClass::isParsable($value);
+        try {
+            HijriDateClass::parse($value);
+            return true;
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
     }
 
     /**

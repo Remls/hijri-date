@@ -2,6 +2,17 @@
 
 Laravel helper package for Hijri dates. Supports displaying dates in Dhivehi, Arabic and English.
 
+## Installation
+
+```
+composer require remls/hijri-date
+```
+
+To publish configuration files:
+```sh
+php artisan vendor:publish --provider="Remls\HijriDate\HijriDateServiceProvider" --tag="config"
+```
+
 ## Creating dates
 
 All of the following methods return an instance of `Remls\HijriDate\HijriDate`.
@@ -28,7 +39,7 @@ use Remls\HijriDate\HijriDate;
 $date = new HijriDate(1443, 9, 1);          // 1st Ramadan 1443
 $date->addDays(1);                          // 2nd Ramadan 1443
 
-// Default locale is DV
+// Default locale is DV. This can be changed in config.
 $date->toFullDate();                        // '2 ރަމަޟާން 1443'
 $date->setLocale('AR')->toFullDate();       // '2 رمضان 1443'
 
@@ -75,9 +86,6 @@ request()->validate([
 
 ## Further improvements
 
-- Configuration:
-  - default locale
-  - max/min year (would need to change Rule)
 - getEstimateFromGregorian(): use Carbon::parse if string is input
 - subDays()
 - Comparison methods

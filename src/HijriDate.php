@@ -30,9 +30,12 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     const DHUL_QADA = 11;
     const DHUL_HIJJA = 12;
 
-    private const PARSABLE_REGEX = "/^1\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|30)$/";
-    private const YEAR_MAX = 1999;  // inclusive
-    private const YEAR_MIN = 1000;  // inclusive
+    // Used as fallbacks if config values are not provided.
+    private const FALLBACK_YEAR_MAX = 1999;  // inclusive
+    private const FALLBACK_YEAR_MIN = 1000;  // inclusive
+    private const FALLBACK_DEFAULT_LOCALE = 'DV';
+
+    private const PARSABLE_REGEX = "/^\d{1,4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|30)$/";
     private const MONTH_MAX = 12;   // inclusive
     private const MONTH_MIN = 1;    // inclusive
     private const DAY_MAX = 30;     // inclusive
@@ -48,7 +51,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         ?int $year = 1000,
         ?int $month = 1,
         ?int $day = 1,
-        ?string $locale = "DV"
+        ?string $locale = null
     ) {
         $this->setYear($year);
         $this->setMonth($month);
@@ -120,8 +123,8 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
 
     public function setYear(int $year): HijriDate
     {
-        $max = self::YEAR_MAX;
-        $min = self::YEAR_MIN;
+        $max = config('hijri.year_max', self::FALLBACK_YEAR_MAX);
+        $min = config('hijri.year_min', self::FALLBACK_YEAR_MIN);
         if ($year > $max || $year < $min)
             throw new InvalidArgumentException("Invalid year. Supported values: $min-$max.");
         $this->year = $year;
@@ -163,8 +166,11 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         return $this->locale;
     }
 
-    public function setLocale(string $locale): HijriDate
+    public function setLocale(?string $locale = null): HijriDate
     {
+        if (! $locale) {
+            $locale = config('hijri.default_locale', self::FALLBACK_DEFAULT_LOCALE);
+        }
         $locale = strtoupper($locale);
         if (! in_array($locale, self::SUPPORTED_LOCALES)) {
             $localesList = implode(", ", self::SUPPORTED_LOCALES);
