@@ -222,7 +222,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
             $hYear++;
         }
         $hYear += $yearsToAdd;
-        if ($hYear > self::YEAR_MAX)
+        if ($hYear > config('hijri.year_max', self::FALLBACK_YEAR_MAX))
             throw new OutOfRangeException("Date value has gotten too large.");
 
         $this->year = $hYear;
