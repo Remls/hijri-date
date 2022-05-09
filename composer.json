@@ -9,7 +9,11 @@
       "email": "adam.raaif.nasheed7@gmail.com"
     }
   ],
-  "require": {},
+  "require": {
+    "php": "^8.0",
+    "laravel/framework": "^8.0||^9.0",
+    "ext-intl": "*"
+  },
   "autoload": {
     "psr-4": {
       "Remls\\HijriDate\\": "src"
