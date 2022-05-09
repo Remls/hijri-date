@@ -65,13 +65,13 @@ class YourModel
 }
 ```
 
-This will automatically store data as `YYYY-MM-DD` string in database, and cast to `Remls\HijriDate\HijriDate` when accessing.
+This will automatically store data as `Y-m-d` string in database, and cast to `Remls\HijriDate\HijriDate` when accessing.
 
 ## Validation
 
 Any string that passes the following conditions is considered a valid Hijri date:
-- in the format `YYYY-MM-DD`
-- year between 1000 and 1999
+- in the format `Y-m-d`
+- year between 1000 and 1999 (This can be changed in config.)
 - month between 1 and 12
 - day between 1 and 30
 

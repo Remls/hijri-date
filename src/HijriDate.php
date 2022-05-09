@@ -83,7 +83,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     /**
      * Create a HijriDate object from a string.
      * 
-     * @param string $hijri     Must be in the format YYYY-MM-DD
+     * @param string $hijri     Must be in the format Y-m-d
      * @return HijriDate
      */
     public static function parse(string $hijri): HijriDate
@@ -248,7 +248,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     }
 
     /**
-     * Returns the date in YYYY-MM-DD format.
+     * Returns the date in Y-m-d format.
      * 
      * @return string
      */
