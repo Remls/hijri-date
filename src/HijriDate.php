@@ -119,12 +119,13 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     /**
      * Get an approximate Hijri date for a given Gregorian date.
      * 
-     * @param Carbon\Carbon $gregorian      Optional. Uses current time if not passed.
+     * @param Carbon\Carbon|string|null $gregorian      Optional. Uses current time if not passed.
      * @return HijriDate
      */
-    public static function getEstimateFromGregorian(?Carbon $gregorian = null): HijriDate
+    public static function getEstimateFromGregorian($gregorian = null): HijriDate
     {
         if (is_null($gregorian)) $gregorian = now();
+        if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
         $gregorian->setTimezone('+5:00');
         $formatter = IntlDateFormatter::create(
             'en_US',

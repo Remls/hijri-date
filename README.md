@@ -86,7 +86,6 @@ request()->validate([
 
 ## Further improvements
 
-- getEstimateFromGregorian(): use Carbon::parse if string is input
 - Support more date formats
 - Translations:
   - Customizable month strings
