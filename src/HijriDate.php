@@ -267,6 +267,16 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         return $this->toDateString();
     }
 
+    public function __debugInfo() {
+        $props = [
+            'date' => $this->toDateString(),
+        ];
+        if ($this->isEstimate()) {
+            $props['estimatedFrom'] = $this->estimatedFrom;
+        }
+        return $props;
+    }
+
     // -- IMPLEMENTED METHODS BELOW THIS LINE --
 
     /**
