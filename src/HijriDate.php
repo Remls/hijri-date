@@ -30,9 +30,12 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     const DHUL_QADA = 11;
     const DHUL_HIJJA = 12;
 
-    private const PARSABLE_REGEX = "/^1\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|30)$/";
-    private const YEAR_MAX = 1999;  // inclusive
-    private const YEAR_MIN = 1000;  // inclusive
+    // Used as fallbacks if config values are not provided.
+    private const FALLBACK_YEAR_MAX = 1999;  // inclusive
+    private const FALLBACK_YEAR_MIN = 1000;  // inclusive
+    private const FALLBACK_DEFAULT_LOCALE = 'DV';
+
+    private const PARSABLE_REGEX = "/^\d{1,4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|30)$/";
     private const MONTH_MAX = 12;   // inclusive
     private const MONTH_MIN = 1;    // inclusive
     private const DAY_MAX = 30;     // inclusive
@@ -45,11 +48,17 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     private ?Carbon $estimatedFrom = null;
 
     public function __construct(
-        ?int $year = 1000,
-        ?int $month = 1,
-        ?int $day = 1,
-        ?string $locale = "DV"
+        ?int $year = null,
+        ?int $month = null,
+        ?int $day = null,
+        ?string $locale = null
     ) {
+        // Use defaults if null
+        if (! $year)    $year = config('hijri.year_min', self::FALLBACK_YEAR_MIN);
+        if (! $month)   $month = self::MONTH_MIN;
+        if (! $day)     $day = self::DAY_MIN;
+        if (! $locale)  $locale = config('hijri.default_locale', self::FALLBACK_DEFAULT_LOCALE);
+
         $this->setYear($year);
         $this->setMonth($month);
         $this->setDay($day);
@@ -120,8 +129,8 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
 
     public function setYear(int $year): HijriDate
     {
-        $max = self::YEAR_MAX;
-        $min = self::YEAR_MIN;
+        $max = config('hijri.year_max', self::FALLBACK_YEAR_MAX);
+        $min = config('hijri.year_min', self::FALLBACK_YEAR_MIN);
         if ($year > $max || $year < $min)
             throw new InvalidArgumentException("Invalid year. Supported values: $min-$max.");
         $this->year = $year;
@@ -216,7 +225,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
             $hYear++;
         }
         $hYear += $yearsToAdd;
-        if ($hYear > self::YEAR_MAX)
+        if ($hYear > config('hijri.year_max', self::FALLBACK_YEAR_MAX))
             throw new OutOfRangeException("Date value has gotten too large.");
 
         $this->year = $hYear;
