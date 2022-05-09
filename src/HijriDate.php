@@ -48,11 +48,17 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     private ?Carbon $estimatedFrom = null;
 
     public function __construct(
-        ?int $year = 1000,
-        ?int $month = 1,
-        ?int $day = 1,
+        ?int $year = null,
+        ?int $month = null,
+        ?int $day = null,
         ?string $locale = null
     ) {
+        // Use defaults if null
+        if (! $year)    $year = config('hijri.year_min', self::FALLBACK_YEAR_MIN);
+        if (! $month)   $month = self::MONTH_MIN;
+        if (! $day)     $day = self::DAY_MIN;
+        if (! $locale)  $locale = config('hijri.default_locale', self::FALLBACK_DEFAULT_LOCALE);
+
         $this->setYear($year);
         $this->setMonth($month);
         $this->setDay($day);
@@ -166,11 +172,8 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         return $this->locale;
     }
 
-    public function setLocale(?string $locale = null): HijriDate
+    public function setLocale(string $locale): HijriDate
     {
-        if (! $locale) {
-            $locale = config('hijri.default_locale', self::FALLBACK_DEFAULT_LOCALE);
-        }
         $locale = strtoupper($locale);
         if (! in_array($locale, self::SUPPORTED_LOCALES)) {
             $localesList = implode(", ", self::SUPPORTED_LOCALES);
