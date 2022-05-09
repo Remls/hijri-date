@@ -87,8 +87,6 @@ request()->validate([
 ## Further improvements
 
 - getEstimateFromGregorian(): use Carbon::parse if string is input
-- subDays()
-- Comparison methods
 - Support more date formats
 - Translations:
   - Customizable month strings

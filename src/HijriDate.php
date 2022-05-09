@@ -8,10 +8,23 @@ use Illuminate\Contracts\Database\Eloquent\SerializesCastableAttributes;
 use IntlDateFormatter;
 use IntlCalendar;
 use InvalidArgumentException;
-use OutOfRangeException;
+use Remls\HijriDate\Traits\Calculations;
+use Remls\HijriDate\Traits\Comparisons;
 
+/**
+ * @method  HijriDate   addDays(int $daysToAdd = 1)             Add specified amount of days.
+ * @method  HijriDate   subDays(int $daysToSubtract = 1)        Subtract specified amount of days.
+ * @method  int         compareWith(HijriDate $other)           Compare this with another HijriDate.
+ * @method  bool        equalTo(HijriDate $other)               Check if this is equal to another HijriDate.
+ * @method  bool        greaterThan(HijriDate $other)           Check if this is greater than another HijriDate.
+ * @method  bool        lessThan(HijriDate $other)              Check if this is less than another HijriDate.
+ * @method  bool        greaterThanOrEqualTo(HijriDate $other)  Check if this is greater than or equal to another HijriDate.
+ * @method  bool        lessThanOrEqualTo(HijriDate $other)     Check if this is less than or equal to another HijriDate.
+ */
 class HijriDate implements CastsAttributes, SerializesCastableAttributes
 {
+    use Calculations, Comparisons;
+
     const SUPPORTED_LOCALES = ["AR", "DV", "EN"];
     const MONTH_NAMES_AR = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
     const MONTH_NAMES_DV = ['މުޙައްރަމް', 'ޞަފަރު', 'ރަބީޢުލް އައްވަލް', 'ރަބީޢުލް އާޚިރު', 'ޖުމާދަލް އޫލާ', 'ޖުމާދަލް އާޚިރާ', 'ރަޖަބު', 'ޝަޢުބާން', 'ރަމަޟާން', 'ޝައްވާލް', 'ޛުލްޤަޢިދާ', 'ޛުލްޙިއްޖާ'];
@@ -29,6 +42,10 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     const SHAWWAL = 10;
     const DHUL_QADA = 11;
     const DHUL_HIJJA = 12;
+
+    const DAYS_PER_WEEK = 7;
+    const DAYS_PER_MONTH = 30;
+    const DAYS_PER_YEAR = 360;
 
     // Used as fallbacks if config values are not provided.
     private const FALLBACK_YEAR_MAX = 1999;  // inclusive
@@ -188,49 +205,9 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         return !is_null($this->estimatedFrom);
     }
 
-    /**
-     * Add specified amount of days.
-     *
-     * This function assumes every Hijri month has 30 days.
-     * This is not true, of course. Therefore, this function will
-     * not (and is not expected to) return accurate results for
-     * large values of `$addDays`.
-     *
-     * @param int $daysToAdd
-     * @return HijriDate
-     */
-    public function addDays(int $daysToAdd): HijriDate
+    public function resetEstimation(): HijriDate
     {
-        if ($daysToAdd < 0)
-            throw new InvalidArgumentException("You cannot add negative days.");
-
-        // Work with copies
-        $hYear = $this->year;
-        $hMonth = $this->month;
-        $hDay = $this->day;
-
-        $yearsToAdd = intdiv($daysToAdd, self::DAY_MAX * self::MONTH_MAX);
-        $daysToAdd -= $yearsToAdd * self::DAY_MAX * self::MONTH_MAX;
-        $monthsToAdd = intdiv($daysToAdd, self::DAY_MAX);
-        $daysToAdd -= $monthsToAdd * self::DAY_MAX;
-
-        $hDay += $daysToAdd;
-        if ($hDay > self::DAY_MAX) {
-            $hDay -= self::DAY_MAX;
-            $hMonth++;
-        }
-        $hMonth += $monthsToAdd;
-        if ($hMonth > self::MONTH_MAX) {
-            $hMonth -= self::MONTH_MAX;
-            $hYear++;
-        }
-        $hYear += $yearsToAdd;
-        if ($hYear > config('hijri.year_max', self::FALLBACK_YEAR_MAX))
-            throw new OutOfRangeException("Date value has gotten too large.");
-
-        $this->year = $hYear;
-        $this->month = $hMonth;
-        $this->day = $hDay;
+        $this->estimatedFrom = null;
         return $this;
     }
 
