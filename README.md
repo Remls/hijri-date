@@ -1,6 +1,18 @@
+<!-- omit in toc -->
 # HijriDate
 
 Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Bengali, Dhivehi and English out of the box, with support for further customizations or adding a language of your choice.
+
+- [Installation](#installation)
+- [Creating dates](#creating-dates)
+- [Available methods](#available-methods)
+  - [Calculations](#calculations)
+  - [Comparisons](#comparisons)
+  - [Formatting](#formatting)
+- [Casting](#casting)
+- [Validation](#validation)
+- [Localization](#localization)
+  - [Adding a language](#adding-a-language)
 
 ## Installation
 
@@ -102,7 +114,7 @@ $date->format("F Y", true);         // "رمضان ١٤٤٣"
 
 ## Casting
 
-The field to be casted must be a string field on database.
+The field to be cast must be a string field on database.
 
 ```php
 // App/Models/YourModel.php
