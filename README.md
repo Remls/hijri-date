@@ -52,8 +52,8 @@ Note that all calculations are subject to the following caveats:
 
 You may compare two HijriDate objects `$a` and `$b` using the following methods:
 
-| Method | Description | |
-| --- | --- | --- |
+| Method | Description |
+| --- | --- |
 | `$a->compareWith($b)` | Returns -1 if $a < $b.<br>Returns 0 if $a == $b.<br>Returns 1 if $a > $b. |
 | `$a->equalTo($b)` | Returns true if $a == $b. |
 | `$a->greaterThan($b)` | Returns true if $a > $b (a is after b). |
@@ -77,7 +77,7 @@ The following options are supported with `$date->format()`:
 | d | Day of month (with leading zero) | 01 ... 30 |
 | D | Weekday (short)* | Sun ... Sat |
 | j | Day of month (without leading zero) | 1 ... 30 |
-| l (lowercase L) | Weekday* | Sunday ... Saturday |
+| l<br>(lowercase L) | Weekday* | Sunday ... Saturday |
 | F | Month | Muharram ... Dhul-Hijja |
 | m | Month (number, with leading zero) | 01 ... 12 |
 | M | Month (short) | Mhr ... DhH |
