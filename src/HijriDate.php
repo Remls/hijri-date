@@ -10,6 +10,7 @@ use IntlCalendar;
 use InvalidArgumentException;
 use Remls\HijriDate\Traits\Calculations;
 use Remls\HijriDate\Traits\Comparisons;
+use Remls\HijriDate\Traits\Formatting;
 
 /**
  * @method  HijriDate   addDays(int $daysToAdd = 1)             Add specified amount of days.
@@ -20,15 +21,17 @@ use Remls\HijriDate\Traits\Comparisons;
  * @method  bool        lessThan(HijriDate $other)              Check if this is less than another HijriDate.
  * @method  bool        greaterThanOrEqualTo(HijriDate $other)  Check if this is greater than or equal to another HijriDate.
  * @method  bool        lessThanOrEqualTo(HijriDate $other)     Check if this is less than or equal to another HijriDate.
+ * @method  string      translate(string $key)                  Return translation in selected locale.
+ * @method  string      toFullDate()                            Returns the date with full month name in selected locale.
+ * @method  string      toDateString()                          Returns the date in Y-m-d format.
+ * @method  string      __toString()
+ * @method  array       __debugInfo()
  */
 class HijriDate implements CastsAttributes, SerializesCastableAttributes
 {
-    use Calculations, Comparisons;
+    use Calculations, Comparisons, Formatting;
 
-    const SUPPORTED_LOCALES = ["AR", "DV", "EN"];
-    const MONTH_NAMES_AR = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
-    const MONTH_NAMES_DV = ['މުޙައްރަމް', 'ޞަފަރު', 'ރަބީޢުލް އައްވަލް', 'ރަބީޢުލް އާޚިރު', 'ޖުމާދަލް އޫލާ', 'ޖުމާދަލް އާޚިރާ', 'ރަޖަބު', 'ޝަޢުބާން', 'ރަމަޟާން', 'ޝައްވާލް', 'ޛުލްޤަޢިދާ', 'ޛުލްޙިއްޖާ'];
-    const MONTH_NAMES_EN = ['Muharram', 'Safar', 'Rabi al-Awwal', 'Rabi al-Akhir', 'Jumada al-Ula', 'Jumada al-Akhira', 'Rajab', 'Sha\'ban', 'Ramadan', 'Shawwal', 'Dhul-Qa\'da', 'Dhul-Hijja'];
+    const SUPPORTED_LOCALES = ["ar", "dv", "en"];
 
     const MUHARRAM = 1;
     const SAFAR = 2;
@@ -50,7 +53,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     // Used as fallbacks if config values are not provided.
     private const FALLBACK_YEAR_MAX = 1999;  // inclusive
     private const FALLBACK_YEAR_MIN = 1000;  // inclusive
-    private const FALLBACK_DEFAULT_LOCALE = 'DV';
+    private const FALLBACK_DEFAULT_LOCALE = 'dv';
 
     private const PARSABLE_REGEX = "/^\d{1,4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|30)$/";
     private const MONTH_MAX = 12;   // inclusive
@@ -192,9 +195,9 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
 
     public function setLocale(string $locale): HijriDate
     {
-        $locale = strtoupper($locale);
-        if (! in_array($locale, self::SUPPORTED_LOCALES)) {
-            $localesList = implode(", ", self::SUPPORTED_LOCALES);
+        $supportedLocales = config('hijri.supported_locales');
+        if (! in_array($locale, $supportedLocales)) {
+            $localesList = implode(", ", $supportedLocales);
             throw new InvalidArgumentException("Invalid locale. Supported values: $localesList");
         }
         $this->locale = $locale;
@@ -206,53 +209,15 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         return !is_null($this->estimatedFrom);
     }
 
+    public function getEstimatedFrom(): ?Carbon
+    {
+        return $this->estimatedFrom;
+    }
+
     public function resetEstimation(): HijriDate
     {
         $this->estimatedFrom = null;
         return $this;
-    }
-
-    /**
-     * Returns the date with full month name in selected locale.
-     * 
-     * @return string
-     */
-    public function toFullDate(): string
-    {
-        // Format month according to locale
-        $monthArrayName = "MONTH_NAMES_".$this->locale;
-        $monthName = constant("self::".$monthArrayName)[$this->month - 1];
-        return "$this->day $monthName $this->year";
-    }
-
-    /**
-     * Returns the date in Y-m-d format.
-     * 
-     * @return string
-     */
-    public function toDateString(): string
-    {
-        $dateParts = [
-            $this->year,
-            str_pad($this->month, 2, "0", STR_PAD_LEFT),
-            str_pad($this->day, 2, "0", STR_PAD_LEFT),
-        ];
-        return implode("-", $dateParts);
-    }
-
-    public function __toString(): string
-    {
-        return $this->toDateString();
-    }
-
-    public function __debugInfo() {
-        $props = [
-            'date' => $this->toDateString(),
-        ];
-        if ($this->isEstimate()) {
-            $props['estimatedFrom'] = $this->estimatedFrom;
-        }
-        return $props;
     }
 
     // -- IMPLEMENTED METHODS BELOW THIS LINE --

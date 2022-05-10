@@ -17,10 +17,16 @@ class HijriDateServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'hijri');
+
         if ($this->app->runningInConsole()) {
             $this->publishes([
-              __DIR__.'/../config/hijri.php' => config_path('hijri.php'),
+                __DIR__.'/../config/hijri.php' => config_path('hijri.php'),
             ], 'config');
+
+            $this->publishes([
+                __DIR__.'/../lang' => $this->app->langPath('vendor/hijri'),
+            ], 'lang');
         }
     }
 }

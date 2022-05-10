@@ -2,9 +2,14 @@
 
 return [
     /**
+     * List of supported locales.
+     */
+    'supported_locales' => ['ar', 'dv', 'en'],
+
+    /**
      * Locale used for formatting by default (when locale is not explicitly set).
      */
-    'default_locale' => 'DV',
+    'default_locale' => 'dv',
 
     /**
      * Maximum and minimum limit for Hijri date years.

@@ -42,6 +42,6 @@ class ValidHijriDate implements Rule
      */
     public function message()
     {
-        return 'The :attribute must be a valid Hijri date.';
+        return trans('hijri::validation.valid_hijri_date');
     }
 }

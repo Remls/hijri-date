@@ -1,6 +1,6 @@
 # HijriDate
 
-Laravel helper package for Hijri dates. Supports displaying dates in Dhivehi, Arabic and English.
+Laravel helper package for Hijri dates. Supports displaying dates in Dhivehi, Arabic and English out of the box, with support for further customizations in a language of your choice.
 
 ## Installation
 
@@ -26,9 +26,10 @@ new HijriDate(1443, 9, 1);          // 1st Ramadan 1443
 HijriDate::parse('1443-09-01');     // 1st Ramadan 1443
 
 // From Gregorian
-HijriDate::getEstimateFromGregorian();          // Today's date
-$input = Carbon::parse('2002-03-04');
-HijriDate::getEstimateFromGregorian($input);    // 20th Dhul-Hijja 1422
+HijriDate::getEstimateFromGregorian();              // Today's date
+HijriDate::getEstimateFromGregorian('1991-12-01');
+$input = Carbon::parse('2002-03-04');               // 25th Jumada al-Ula 1412
+HijriDate::getEstimateFromGregorian($input);        // 20th Dhul-Hijja 1422
 ```
 
 ## Available methods
@@ -38,12 +39,13 @@ use Remls\HijriDate\HijriDate;
 
 $date = new HijriDate(1443, 9, 1);          // 1st Ramadan 1443
 $date->addDays(1);                          // 2nd Ramadan 1443
+$date->subDays(3);                          // 29th Sha'ban 1443
 
 // Default locale is DV. This can be changed in config.
-$date->toFullDate();                        // '2 ރަމަޟާން 1443'
-$date->setLocale('AR')->toFullDate();       // '2 رمضان 1443'
+$date->toFullDate();                        // '29 ޝަޢުބާން 1443'
+$date->setLocale('AR')->toFullDate();       // '29 شعبان 1443'
 
-$date->toDateString();                      // '1443-09-02'
+$date->toDateString();                      // '1443-08-29'
 ```
 
 ## Casting
@@ -84,10 +86,25 @@ request()->validate([
 ]);
 ```
 
+## Localization
+
+Publish translation files by using:
+```sh
+php artisan vendor:publish --provider="Remls\HijriDate\HijriDateServiceProvider" --tag="lang"
+```
+
+You may then customize strings as needed.
+
+### Adding a language
+
+To add support for another language:
+1. Publish the configuration file. The file will be copied to `config/hijri.php`.
+2. Publish the translation files. The files will be copied to `lang/vendor/hijri`.
+3. Copy one of the existing translation folders, and rename it with the language code of your choice. Eg: `lang/vendor/hijri/es`
+4. Change strings to their respective translations.
+5. Add the language code to `supported_locales` in `config/hijri.php`.
+6. (Optional) Change `default_locale` in `config/hijri.php` to the new language code.
+
 ## Further improvements
 
 - Support more date formats
-- Translations:
-  - Customizable month strings
-  - Customizable validation error message
-  - Support more languages
