@@ -21,9 +21,10 @@ use Remls\HijriDate\Traits\Formatting;
  * @method  bool        lessThan(HijriDate $other)              Check if this is less than another HijriDate.
  * @method  bool        greaterThanOrEqualTo(HijriDate $other)  Check if this is greater than or equal to another HijriDate.
  * @method  bool        lessThanOrEqualTo(HijriDate $other)     Check if this is less than or equal to another HijriDate.
- * @method  string      translate(string $key)                  Return translation in selected locale.
- * @method  string      toFullDate()                            Returns the date with full month name in selected locale.
- * @method  string      toDateString()                          Returns the date in Y-m-d format.
+ * @method  string      translate(string $key)                  Returns translation in selected locale.
+ * @method  string      format(string $format)                  Returns the date formatted according to given format.
+ * @method  string      toFullDate()                            Returns the date in "j F Y" format. (1 Muharram 1000)
+ * @method  string      toDateString()                          Returns the date in "Y-m-d" format. (1000-01-01)
  * @method  string      __toString()
  * @method  array       __debugInfo()
  */
@@ -31,20 +32,26 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
 {
     use Calculations, Comparisons, Formatting;
 
-    const SUPPORTED_LOCALES = ["ar", "dv", "en"];
+    const MUHARRAM      = 1;
+    const SAFAR         = 2;
+    const RABI_I        = 3;
+    const RABI_II       = 4;
+    const JUMAD_I       = 5;
+    const JUMAD_II      = 6;
+    const RAJAB         = 7;
+    const SHABAN        = 8;
+    const RAMADAN       = 9;
+    const SHAWWAL       = 10;
+    const DHUL_QADA     = 11;
+    const DHUL_HIJJA    = 12;
 
-    const MUHARRAM = 1;
-    const SAFAR = 2;
-    const RABI_I = 3;
-    const RABI_II = 4;
-    const JUMAD_I = 5;
-    const JUMAD_II = 6;
-    const RAJAB = 7;
-    const SHABAN = 8;
-    const RAMADAN = 9;
-    const SHAWWAL = 10;
-    const DHUL_QADA = 11;
-    const DHUL_HIJJA = 12;
+    const SUNDAY    = 0;
+    const MONDAY    = 1;
+    const TUESDAY   = 2;
+    const WEDNESDAY = 3;
+    const THURSDAY  = 4;
+    const FRIDAY    = 5;
+    const SATURDAY  = 6;
 
     const DAYS_PER_WEEK = 7;
     const DAYS_PER_MONTH = 30;
