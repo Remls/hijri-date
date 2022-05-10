@@ -4,7 +4,7 @@ return [
     /**
      * List of supported locales.
      */
-    'supported_locales' => ['ar', 'dv', 'en'],
+    'supported_locales' => ['ar', 'bn', 'dv', 'en'],
 
     /**
      * Locale used for formatting by default (when locale is not explicitly set).

@@ -1,6 +1,6 @@
 # HijriDate
 
-Laravel helper package for Hijri dates. Supports displaying dates in Dhivehi, Arabic and English out of the box, with support for further customizations in a language of your choice.
+Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Bengali, Dhivehi and English out of the box, with support for further customizations or adding a language of your choice.
 
 ## Installation
 
