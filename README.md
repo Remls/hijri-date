@@ -87,6 +87,18 @@ The following options are supported with `$date->format()`:
 
 \* Only supported for HijriDates created as estimates from Gregorian.
 
+```php
+use Remls\HijriDate\HijriDate;
+
+$date = new HijriDate(1443, 9, 1);  // 1st Ramadan 1443
+$date->format("F");                 // "ރަމަޟާން" (using default locale 'dv')
+
+$date->setLocale('ar');
+$date->format("F Y");               // "رمضان 1443"
+// Use numerals from locale
+$date->format("F Y", true);         // "رمضان ١٤٤٣"
+```
+
 
 ## Casting
 

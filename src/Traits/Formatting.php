@@ -19,9 +19,10 @@ trait Formatting
      * Returns the date formatted according to given format.
      * 
      * @param string $format
+     * @param bool $transformNumerals   Whether to also transform numerals, if the current locale uses a different numeral system (eg: ١٢٣ instead of 123).
      * @return string
      */
-    public function format(string $format): string
+    public function format(string $format, bool $transformNumerals = false): string
     {
         // Not possible to get any weekday information without estimatedFrom.
         $dayOfWeek = $this->isEstimate()
@@ -84,6 +85,9 @@ trait Formatting
                     break;
             }
         }
+        if ($transformNumerals) {
+            $returnString = self::transformNumerals($returnString, $this->locale);
+        }
         return $returnString;
     }
 
@@ -105,6 +109,24 @@ trait Formatting
     public function toDateString(): string
     {
         return $this->format("Y-m-d");
+    }
+
+    /**
+     * Transform numerals in the input string to those used by the provided locale.
+     * 
+     * @param string $input
+     * @param string $locale
+     * @return string
+     */
+    private static function transformNumerals(string $input, string $locale): string
+    {
+        $inputChars = mb_str_split($input);
+        for ($i = 0; $i < count($inputChars); $i++) { 
+            if (is_numeric($inputChars[$i])) {
+                $inputChars[$i] = trans('hijri::formatting.numerals.'.$inputChars[$i], [], $locale);
+            }
+        }
+        return implode("", $inputChars);
     }
 
     public function __toString(): string
