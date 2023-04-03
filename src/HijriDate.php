@@ -139,8 +139,8 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         $gregorian->setTimezone('+5:00');
         $formatter = IntlDateFormatter::create(
             'en_US',
-            NULL,
-            NULL,
+            IntlDateFormatter::FULL,
+            IntlDateFormatter::FULL,
             'Indian/Maldives',
             IntlCalendar::createInstance('Indian/Maldives', "en_US@calendar=islamic"),
             'yyyy-MM-dd'
