@@ -150,6 +150,22 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         return $estimate;
     }
 
+    /**
+     * Create a HijriDate object from a Gregorian date.
+     * 
+     * @param Carbon\Carbon|string|null $gregorian      Optional. Uses current time if not passed.
+     * @return HijriDate
+     */
+    public static function createFromGregorian($gregorian = null): HijriDate
+    {
+        if (is_null($gregorian)) $gregorian = now();
+        if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
+
+        $hijri = (new MaldivesG2HConverter())->createFromGregorian($gregorian);
+        $hijri->estimatedFrom = $gregorian;
+        return $hijri;
+    }
+
     public function getYear(): int
     {
         return $this->year;
