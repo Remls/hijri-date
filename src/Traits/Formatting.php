@@ -24,8 +24,6 @@ trait Formatting
      */
     public function format(string $format, bool $transformNumerals = false): string
     {
-        $dayOfWeek = $this->getGregorianDate()->dayOfWeek;   // 0 for Sun ... 6 for Sat
-
         $returnString = "";
         $formatChars = mb_str_split($format);
         for ($i = 0; $i < count($formatChars); $i++) { 
@@ -35,12 +33,14 @@ trait Formatting
                     $returnString .= str_pad($this->day, 2, "0", STR_PAD_LEFT);
                     break;
                 case 'D':   // Weekday (short)
+                    $dayOfWeek = $this->getGregorianDate()->dayOfWeek;   // 0 for Sun ... 6 for Sat
                     $returnString .= $this->translate('formatting.weekdays_short.'.$dayOfWeek);
                     break;
                 case 'j':   // Day of month without leading zero
                     $returnString .= $this->day;
                     break;
                 case 'l':   // Weekday
+                    $dayOfWeek = $this->getGregorianDate()->dayOfWeek;   // 0 for Sun ... 6 for Sat
                     $returnString .= $this->translate('formatting.weekdays.'.$dayOfWeek);
                     break;
                 // case 'S':   // Ordinal
@@ -132,7 +132,7 @@ trait Formatting
         $props = [
             'date' => $this->toDateString(),
         ];
-        if ($this->getGregorianDate()) {
+        if ($this->gregorianDate) {
             $props['gregorian'] = $this->gregorianDate;
         }
         return $props;
