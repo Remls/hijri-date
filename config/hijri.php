@@ -22,8 +22,15 @@ return [
      * Configuration for converting Gregorian dates to Hijri dates.
      */
     'conversion' => [
+        // Customize from where the conversion mapping data is fetched, and how it is cached ...
         'data_url' => 'https://gist.githubusercontent.com/Remls/b0ebba53bb2a8670f333f8a88de4aae3/raw',
         'cache_key' => 'hijri_to_gregorian_map',
         'cache_period' => 60 * 24,
-    ]
+
+        // ... or gain full control over how conversion works by defining your own converter class(es).
+        'converters' => [
+            'exact' => \Remls\HijriDate\Converters\MaldivesG2HConverter::class, // createFromGregorian()
+            'estimate' => \Remls\HijriDate\Converters\MaldivesEstimateG2HConverter::class, // getEstimateFromGregorian()
+        ],
+    ],
 ];

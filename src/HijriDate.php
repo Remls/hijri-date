@@ -135,7 +135,11 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         if (is_null($gregorian)) $gregorian = now();
         if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
 
-        $hijri = (new \Remls\HijriDate\Converters\MaldivesEstimateG2HConverter())->createFromGregorian($gregorian);
+        $converter = config(
+            'hijri.conversion.converters.estimate',
+            \Remls\HijriDate\Converters\MaldivesEstimateG2HConverter::class
+        );
+        $hijri = (new $converter())->createFromGregorian($gregorian);
         $hijri->estimatedFrom = $gregorian;
         return $hijri;
     }
@@ -151,7 +155,11 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         if (is_null($gregorian)) $gregorian = now();
         if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
 
-        $hijri = (new \Remls\HijriDate\Converters\MaldivesG2HConverter())->createFromGregorian($gregorian);
+        $converter = config(
+            'hijri.conversion.converters.exact',
+            \Remls\HijriDate\Converters\MaldivesG2HConverter::class
+        );
+        $hijri = (new $converter())->createFromGregorian($gregorian);
         $hijri->estimatedFrom = $gregorian;
         return $hijri;
     }
