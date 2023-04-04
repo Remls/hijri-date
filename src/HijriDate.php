@@ -5,8 +5,6 @@ namespace Remls\HijriDate;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Contracts\Database\Eloquent\SerializesCastableAttributes;
-use IntlDateFormatter;
-use IntlCalendar;
 use InvalidArgumentException;
 use Remls\HijriDate\Traits\Calculations;
 use Remls\HijriDate\Traits\Comparisons;
@@ -136,18 +134,10 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     {
         if (is_null($gregorian)) $gregorian = now();
         if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
-        $gregorian->setTimezone('+5:00');
-        $formatter = IntlDateFormatter::create(
-            'en_US',
-            IntlDateFormatter::FULL,
-            IntlDateFormatter::FULL,
-            'Indian/Maldives',
-            IntlCalendar::createInstance('Indian/Maldives', "en_US@calendar=islamic"),
-            'yyyy-MM-dd'
-        );
-        $estimate = self::parse($formatter->format($gregorian));
-        $estimate->estimatedFrom = $gregorian;
-        return $estimate;
+
+        $hijri = (new \Remls\HijriDate\Converters\MaldivesEstimateG2HConverter())->createFromGregorian($gregorian);
+        $hijri->estimatedFrom = $gregorian;
+        return $hijri;
     }
 
     /**
