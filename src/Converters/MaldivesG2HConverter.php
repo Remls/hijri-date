@@ -93,6 +93,16 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
                 $closestDateDiff = $diff;
             }
         }
+        // Date is too old to be found in the map
+        if (is_null($closestDate)) {
+            $dateDisplay = $gregorian->format('d M Y');
+            throw new InvalidArgumentException("Date is too old to be converted ($dateDisplay).");
+            // To resolve, do one of the following:
+            // - use MaldivesEstimateG2HConverter after handling this exception
+            // - use MaldivesEstimateG2HConverter in config('hijri.conversion.converter') to handle all dates with that class
+            // - provide your own date map in config('hijri.conversion.data_url') with data for older dates
+            // - use your own converter class in config('hijri.conversion.converter') that handles older dates
+        }
 
         $closestDate = HijriDate::parse($closestDate);
         $closestDate->addDays($closestDateDiff);
