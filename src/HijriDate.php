@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Remls\HijriDate\Traits\Calculations;
 use Remls\HijriDate\Traits\Comparisons;
 use Remls\HijriDate\Traits\Formatting;
+use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
 
 /**
  * @method  HijriDate   addDays(int $daysToAdd = 1)             Add specified amount of days.
@@ -139,6 +140,11 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
             'hijri.conversion.converter',
             \Remls\HijriDate\Converters\MaldivesG2HConverter::class
         );
+        if (! class_exists($converter))
+            throw new InvalidArgumentException("Invalid converter class: $converter");
+        if (! in_array(GregorianToHijriConverter::class, class_implements($converter)))
+            throw new InvalidArgumentException("Converter class must implement GregorianToHijriConverter: $converter");
+        
         $hijri = (new $converter())->createFromGregorian($gregorian);
         $hijri->estimatedFrom = $gregorian;
         return $hijri;
