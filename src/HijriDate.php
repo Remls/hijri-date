@@ -125,26 +125,6 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     }
 
     /**
-     * Get an approximate Hijri date for a given Gregorian date.
-     * 
-     * @param Carbon\Carbon|string|null $gregorian      Optional. Uses current time if not passed.
-     * @return HijriDate
-     */
-    public static function getEstimateFromGregorian($gregorian = null): HijriDate
-    {
-        if (is_null($gregorian)) $gregorian = now();
-        if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
-
-        $converter = config(
-            'hijri.conversion.converters.estimate',
-            \Remls\HijriDate\Converters\MaldivesEstimateG2HConverter::class
-        );
-        $hijri = (new $converter())->createFromGregorian($gregorian);
-        $hijri->estimatedFrom = $gregorian;
-        return $hijri;
-    }
-
-    /**
      * Create a HijriDate object from a Gregorian date.
      * 
      * @param Carbon\Carbon|string|null $gregorian      Optional. Uses current time if not passed.
@@ -156,7 +136,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
 
         $converter = config(
-            'hijri.conversion.converters.exact',
+            'hijri.conversion.converter',
             \Remls\HijriDate\Converters\MaldivesG2HConverter::class
         );
         $hijri = (new $converter())->createFromGregorian($gregorian);

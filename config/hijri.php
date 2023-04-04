@@ -27,10 +27,7 @@ return [
         'cache_key' => 'hijri_to_gregorian_map',
         'cache_period' => 60 * 24,
 
-        // ... or gain full control over how conversion works by defining your own converter class(es).
-        'converters' => [
-            'exact' => \Remls\HijriDate\Converters\MaldivesG2HConverter::class, // createFromGregorian()
-            'estimate' => \Remls\HijriDate\Converters\MaldivesEstimateG2HConverter::class, // getEstimateFromGregorian()
-        ],
+        // ... or gain full control over how conversion works by defining your own converter class.
+        'converter' => \Remls\HijriDate\Converters\MaldivesG2HConverter::class,
     ],
 ];

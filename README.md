@@ -38,10 +38,10 @@ new HijriDate(1443, 9, 1);          // 1st Ramadan 1443
 HijriDate::parse('1443-09-01');     // 1st Ramadan 1443
 
 // From Gregorian
-HijriDate::getEstimateFromGregorian();              // Today's date
-HijriDate::getEstimateFromGregorian('1991-12-01');  // 25th Jumada al-Ula 1412
+HijriDate::createFromGregorian();              // Today's date
+HijriDate::createFromGregorian('1991-12-01');  // 20th Jumada al-Ula 1412
 $input = Carbon::parse('2002-03-04');
-HijriDate::getEstimateFromGregorian($input);        // 20th Dhul-Hijja 1422
+HijriDate::createFromGregorian($input);        // 20th Dhul-Hijja 1422
 ```
 
 ## Available methods
