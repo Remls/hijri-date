@@ -161,7 +161,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         if (is_null($gregorian)) $gregorian = now();
         if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
 
-        $hijri = (new MaldivesG2HConverter())->createFromGregorian($gregorian);
+        $hijri = (new \Remls\HijriDate\Converters\MaldivesG2HConverter())->createFromGregorian($gregorian);
         $hijri->estimatedFrom = $gregorian;
         return $hijri;
     }

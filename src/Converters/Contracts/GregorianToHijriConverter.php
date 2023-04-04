@@ -1,6 +1,6 @@
 <?php
 
-namespace Remls\HijriDate\Contracts;
+namespace Remls\HijriDate\Converters\Contracts;
 
 use Remls\HijriDate\HijriDate;
 

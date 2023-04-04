@@ -1,8 +1,8 @@
 <?php
 
-namespace Remls\HijriDate;
+namespace Remls\HijriDate\Converters;
 
-use Remls\HijriDate\Contracts\GregorianToHijriConverter;
+use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
 use Remls\HijriDate\HijriDate;
 use Carbon\Carbon;
 use InvalidArgumentException;
