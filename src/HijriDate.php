@@ -71,7 +71,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     private int $month;
     private int $day;
     private string $locale;
-    private ?Carbon $estimatedFrom = null;
+    private ?Carbon $gregorianDate = null;
 
     public function __construct(
         ?int $year = null,
@@ -146,7 +146,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
             throw new InvalidArgumentException("Converter class must implement GregorianToHijriConverter: $converter");
         
         $hijri = (new $converter())->createFromGregorian($gregorian);
-        $hijri->estimatedFrom = $gregorian;
+        $hijri->gregorianDate = $gregorian;
         return $hijri;
     }
 
@@ -211,19 +211,15 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         return $this;
     }
 
-    public function isEstimate(): bool
+    public function getGregorianDate(): ?Carbon
     {
-        return !is_null($this->estimatedFrom);
+        // TODO: Set date if null
+        return $this->gregorianDate;
     }
 
-    public function getEstimatedFrom(): ?Carbon
+    public function resetGregorianDate(): HijriDate
     {
-        return $this->estimatedFrom;
-    }
-
-    public function resetEstimation(): HijriDate
-    {
-        $this->estimatedFrom = null;
+        $this->gregorianDate = null;
         return $this;
     }
 

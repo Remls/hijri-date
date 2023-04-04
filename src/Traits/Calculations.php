@@ -49,7 +49,7 @@ trait Calculations
         $this->year = $hYear;
         $this->month = $hMonth;
         $this->day = $hDay;
-        $this->resetEstimation();
+        $this->resetGregorianDate();
         return $this;
     }
 
@@ -91,7 +91,7 @@ trait Calculations
         $this->year = $hYear;
         $this->month = $hMonth;
         $this->day = $hDay;
-        $this->resetEstimation();
+        $this->resetGregorianDate();
         return $this;
     }
 }

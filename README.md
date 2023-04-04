@@ -58,7 +58,7 @@ $date->subDays(3);                  // 29th Sha'ban 1443
 
 Note that all calculations are subject to the following caveats:
 - **All months are assumed to have 30 days each.** This is not true in practice, of course. Therefore, these functions are not expected to return accurate results if the month rolls over during the calculation.
-- If the HijriDate was created by using an estimate (from Gregorian), running a calculation method on the object will **clear that estimate**. (i.e. `getEstimatedFrom()` will now return null.)
+- If the HijriDate was created from a Gregorian date, running a calculation method on the object will **clear the Gregorian date**.
 
 ### Comparisons
 
@@ -89,15 +89,13 @@ The following options are supported with `$date->format()`:
 | d | Day of month (with leading zero) | 01 ... 30 |
 | D | Weekday (short)* | Sun ... Sat |
 | j | Day of month (without leading zero) | 1 ... 30 |
-| l<br>(lowercase L) | Weekday* | Sunday ... Saturday |
+| l<br>(lowercase L) | Weekday | Sunday ... Saturday |
 | F | Month | Muharram ... Dhul-Hijja |
 | m | Month (number, with leading zero) | 01 ... 12 |
 | M | Month (short) | Mhr ... DhH |
 | n | Month (number, without leading zero) | 1 ... 12 |
 | Y | Year | 1000 ... 1999 |
 | y | Year (final two digits) | 00 ... 99 |
-
-\* Only supported for HijriDates created as estimates from Gregorian.
 
 ```php
 use Remls\HijriDate\HijriDate;

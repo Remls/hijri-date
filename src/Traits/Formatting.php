@@ -24,10 +24,7 @@ trait Formatting
      */
     public function format(string $format, bool $transformNumerals = false): string
     {
-        // Not possible to get any weekday information without estimatedFrom.
-        $dayOfWeek = $this->isEstimate()
-            ? $this->estimatedFrom->dayOfWeek   // 0 for Sun ... 6 for Sat
-            : null;
+        $dayOfWeek = $this->getGregorianDate()->dayOfWeek;   // 0 for Sun ... 6 for Sat
 
         $returnString = "";
         $formatChars = mb_str_split($format);
@@ -38,17 +35,13 @@ trait Formatting
                     $returnString .= str_pad($this->day, 2, "0", STR_PAD_LEFT);
                     break;
                 case 'D':   // Weekday (short)
-                    if (!is_null($dayOfWeek)) {
-                        $returnString .= $this->translate('formatting.weekdays_short.'.$dayOfWeek);
-                    }
+                    $returnString .= $this->translate('formatting.weekdays_short.'.$dayOfWeek);
                     break;
                 case 'j':   // Day of month without leading zero
                     $returnString .= $this->day;
                     break;
                 case 'l':   // Weekday
-                    if (!is_null($dayOfWeek)) {
-                        $returnString .= $this->translate('formatting.weekdays.'.$dayOfWeek);
-                    }
+                    $returnString .= $this->translate('formatting.weekdays.'.$dayOfWeek);
                     break;
                 // case 'S':   // Ordinal
                 //     break;
@@ -139,8 +132,8 @@ trait Formatting
         $props = [
             'date' => $this->toDateString(),
         ];
-        if ($this->isEstimate()) {
-            $props['estimatedFrom'] = $this->estimatedFrom;
+        if ($this->getGregorianDate()) {
+            $props['gregorian'] = $this->gregorianDate;
         }
         return $props;
     }
