@@ -67,12 +67,12 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
     }
 
     /**
-     * Create a HijriDate object from a Gregorian date.
+     * Get the HijriDate object from a Gregorian date.
      * 
-     * @param Carbon\Carbon $gregorian
-     * @return HijriDate
+     * @param \Carbon\Carbon $gregorian
+     * @return \Remls\HijriDate\HijriDate
      */
-    public function createFromGregorian($gregorian): HijriDate
+    public function getHijriFromGregorian(Carbon $gregorian): HijriDate
     {
         $gregorian->setTimezone('+5:00');   // Ensure it is in MVT
         $data = $this->getData();

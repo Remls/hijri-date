@@ -4,18 +4,19 @@ namespace Remls\HijriDate\Converters;
 
 use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
 use Remls\HijriDate\HijriDate;
+use Carbon\Carbon;
 use IntlDateFormatter;
 use IntlCalendar;
 
 class MaldivesEstimateG2HConverter implements GregorianToHijriConverter
 {
     /**
-     * Create a HijriDate object from a Gregorian date.
+     * Get the HijriDate object from a Gregorian date.
      * 
-     * @param Carbon\Carbon $gregorian
-     * @return HijriDate
+     * @param \Carbon\Carbon $gregorian
+     * @return \Remls\HijriDate\HijriDate
      */
-    public function createFromGregorian($gregorian): HijriDate
+    public function getHijriFromGregorian(Carbon $gregorian): HijriDate
     {
         $gregorian->setTimezone('+5:00');   // Ensure it is in MVT
         $formatter = IntlDateFormatter::create(

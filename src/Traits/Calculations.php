@@ -15,7 +15,7 @@ trait Calculations
      * Add specified amount of days.
      * 
      * @param int $daysToAdd
-     * @return HijriDate
+     * @return \Remls\HijriDate\HijriDate
      */
     public function addDays(int $daysToAdd = 1): HijriDate
     {
@@ -57,7 +57,7 @@ trait Calculations
      * Subtract specified amount of days.
      *
      * @param int $daysToSubtract
-     * @return HijriDate
+     * @return \Remls\HijriDate\HijriDate
      */
     public function subDays(int $daysToSubtract = 1): HijriDate
     {

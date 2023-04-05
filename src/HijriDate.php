@@ -110,7 +110,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
      * Create a HijriDate object from a string.
      * 
      * @param string $hijri     Must be in the format Y-m-d
-     * @return HijriDate
+     * @return \Remls\HijriDate\HijriDate
      */
     public static function parse(string $hijri): HijriDate
     {
@@ -128,8 +128,8 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     /**
      * Create a HijriDate object from a Gregorian date.
      * 
-     * @param Carbon\Carbon|string|null $gregorian      Optional. Uses current time if not passed.
-     * @return HijriDate
+     * @param \Carbon\Carbon|string|null $gregorian      Optional. Uses current time if not passed.
+     * @return \Remls\HijriDate\HijriDate
      */
     public static function createFromGregorian($gregorian = null): HijriDate
     {
@@ -232,7 +232,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
-     * @return HijriDate|null
+     * @return \Remls\HijriDate\HijriDate|null
      */
     public function get($model, $key, $value, $attributes)
     {
