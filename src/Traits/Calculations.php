@@ -94,4 +94,35 @@ trait Calculations
         $this->resetGregorianDate();
         return $this;
     }
+
+    /**
+     * Get the difference in days between this and another HijriDate.
+     * 
+     * @param \Remls\HijriDate\HijriDate $other
+     * @param bool $absolute Get absolute value of the difference
+     * @return int
+     */
+    public function diffInDays(HijriDate $other, bool $absolute = true): int
+    {
+        $comparison = $this->compareWith($other);
+        if ($comparison === 0) {
+            // The dates are equal
+            return 0;
+        } else if ($comparison === -1) {
+            // $this is earlier than $other
+            $days = 0;
+            $days += ($other->year - $this->year) * self::DAYS_PER_YEAR;
+            $days += ($other->month - $this->month) * self::DAYS_PER_MONTH;
+            $days += $other->day - $this->day;
+            return $days;
+        } else if ($comparison === 1) {
+            // $this is later than $other
+            $days = 0;
+            $days += ($this->year - $other->year) * self::DAYS_PER_YEAR;
+            $days += ($this->month - $other->month) * self::DAYS_PER_MONTH;
+            $days += $this->day - $other->day;
+            if (!$absolute) $days *= -1;
+            return $days;
+        }
+    }
 }

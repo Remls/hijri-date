@@ -14,6 +14,7 @@ use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
 /**
  * @method  HijriDate   addDays(int $daysToAdd = 1)             Add specified amount of days.
  * @method  HijriDate   subDays(int $daysToSubtract = 1)        Subtract specified amount of days.
+ * @method  int         diffInDays(HijriDate $other, bool $absolute = true)     Get the difference in days between this and another HijriDate.
  * @method  int         compareWith(HijriDate $other)           Compare this with another HijriDate.
  * @method  bool        equalTo(HijriDate $other)               Check if this is equal to another HijriDate.
  * @method  bool        greaterThan(HijriDate $other)           Check if this is greater than another HijriDate.
@@ -135,17 +136,8 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     {
         if (is_null($gregorian)) $gregorian = now();
         if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
-
-        $converter = config(
-            'hijri.conversion.converter',
-            \Remls\HijriDate\Converters\MaldivesG2HConverter::class
-        );
-        if (! class_exists($converter))
-            throw new InvalidArgumentException("Invalid converter class: $converter");
-        if (! in_array(GregorianToHijriConverter::class, class_implements($converter)))
-            throw new InvalidArgumentException("Converter class must implement GregorianToHijriConverter: $converter");
         
-        $hijri = (new $converter())->createFromGregorian($gregorian);
+        $hijri = self::getConverter()->getHijriFromGregorian($gregorian);
         $hijri->gregorianDate = $gregorian;
         return $hijri;
     }
@@ -213,7 +205,9 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
 
     public function getGregorianDate(): ?Carbon
     {
-        // TODO: Set date if null
+        if (! $this->gregorianDate) {
+            $this->gregorianDate = self::getConverter()->getGregorianFromHijri($this);
+        }
         return $this->gregorianDate;
     }
 
@@ -221,6 +215,20 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     {
         $this->gregorianDate = null;
         return $this;
+    }
+
+    private static function getConverter(): GregorianToHijriConverter
+    {
+        $converter = config(
+            'hijri.conversion.converter',
+            \Remls\HijriDate\Converters\MaldivesG2HConverter::class
+        );
+        if (! class_exists($converter))
+            throw new InvalidArgumentException("Invalid converter class: $converter");
+        if (! in_array(GregorianToHijriConverter::class, class_implements($converter)))
+            throw new InvalidArgumentException("Converter class must implement GregorianToHijriConverter: $converter");
+        
+        return new $converter();
     }
 
     // -- IMPLEMENTED METHODS BELOW THIS LINE --

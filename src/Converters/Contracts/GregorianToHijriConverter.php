@@ -14,4 +14,12 @@ interface GregorianToHijriConverter
      * @return \Remls\HijriDate\HijriDate
      */
     public function getHijriFromGregorian(Carbon $gregorian): HijriDate;
+
+    /**
+     * Get the Gregorian date from a HijriDate object.
+     * 
+     * @param \Remls\HijriDate\HijriDate $hijri
+     * @return \Carbon\Carbon
+     */
+    public function getGregorianFromHijri(HijriDate $hijri): Carbon;
 }
