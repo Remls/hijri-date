@@ -6,6 +6,7 @@ use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
 use Remls\HijriDate\HijriDate;
 use Carbon\Carbon;
 use InvalidArgumentException;
+use RuntimeException;
 
 class MaldivesG2HConverter implements GregorianToHijriConverter
 {
@@ -34,6 +35,10 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
     {
         // Load data from source
         $file = file_get_contents($this->dataUrl);
+        if ($file === false) {
+            throw new RuntimeException("Cannot load G2H map: Request to $this->dataUrl failed");
+        }
+
         $csv = array_map("str_getcsv", explode("\n", $file));
         $headers = array_shift($csv);
         $data = [];
