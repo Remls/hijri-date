@@ -27,6 +27,10 @@ class HijriDateServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../lang' => $this->app->langPath('vendor/hijri'),
             ], 'lang');
+
+            $this->commands([
+                Console\FetchG2HMap::class,
+            ]);
         }
     }
 }
