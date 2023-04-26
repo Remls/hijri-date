@@ -14,6 +14,7 @@ Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Ben
 - [Validation](#validation)
 - [Localization](#localization)
   - [Adding a language](#adding-a-language)
+- [Migrating from v1 to v2](#migrating-from-v1-to-v2)
 
 ## Installation
 
@@ -185,3 +186,15 @@ To add support for another language:
 4. Change strings to their respective translations.
 5. Add the language code to `supported_locales` in `config/hijri.php`.
 6. (Optional) Change `default_locale` in `config/hijri.php` to the new language code.
+
+## Migrating from v1 to v2
+
+The package no longer uses estimates when converting from Hijri to Gregorian by default.
+- New keys have been added to `config/hijri.php`. You may need to update your configuration file.
+- The function `getEstimateFromGregorian` has been **REMOVED** in favour of `createFromGregorian`.
+  - To maintain the same behaviour as before:
+    1. Change `config/hijri.php` > `conversion.converter` to `\Remls\HijriDate\Converters\MaldivesEstimateG2HConverter::class`.
+    2. Change all calls from `getEstimateFromGregorian` to `createFromGregorian`.
+- The function `isEstimate` has been **REMOVED**. There is no more need to check if the date was made from an estimate, as you can now always just get the corresponding Gregorian date with a call to `getGregorianDate`, regardless of how it was created.
+- The function `getEstimatedFrom` has been **REMOVED** in favour of `getGregorianDate`.
+- The function `resetEstimation` has been **REMOVED** in favour of `resetGregorianDate`.
