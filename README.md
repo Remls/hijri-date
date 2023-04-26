@@ -5,6 +5,7 @@ Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Ben
 
 - [Installation](#installation)
 - [Creating dates](#creating-dates)
+  - [Customizing how dates are converted between Hijri and Gregorian](#customizing-how-dates-are-converted-between-hijri-and-gregorian)
 - [Available methods](#available-methods)
   - [Calculations](#calculations)
   - [Comparisons](#comparisons)
@@ -44,6 +45,21 @@ $input = Carbon::parse('2002-03-04');
 HijriDate::createFromGregorian($input);        // 20th Dhul-Hijja 1422
 ```
 
+### Customizing how dates are converted between Hijri and Gregorian
+
+By default, the package uses [an external map](https://gist.github.com/Remls/b0ebba53bb2a8670f333f8a88de4aae3) between Hijri and Gregorian dates in Maldives to convert between the two. This map is cached and reused for subsequent conversions.
+
+You may customize for how long the map is cached by changing `config/hijri.php` > `conversion.cache_period`.
+
+You may manually re-fetch data from the external source by running `php artisan hijri:fetch`.
+
+The package also comes with an alternative class for converting dates using calculations instead of a map. You may enable it by changing `config/hijri.php` > `conversion.converter` to `\Remls\HijriDate\Converters\MaldivesEstimateG2HConverter::class`.
+
+You may customize how dates are converted by:
+- providing your own map in `config/hijri.php` > `conversion.data_url`
+- providing your own custom converter class in `config/hijri.php` > `conversion.converter`
+  - The class must implement `\Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter`.
+
 ## Available methods
 
 ### Calculations
@@ -51,14 +67,15 @@ HijriDate::createFromGregorian($input);        // 20th Dhul-Hijja 1422
 ```php
 use Remls\HijriDate\HijriDate;
 
-$date = new HijriDate(1443, 9, 1);  // 1st Ramadan 1443
-$date->addDays(1);                  // 2nd Ramadan 1443
-$date->subDays(3);                  // 29th Sha'ban 1443
+$date = new HijriDate(1443, 9, 1);   // 1st Ramadan 1443
+$date->addDays(1);                   // 2nd Ramadan 1443
+$date->subDays(3);                   // 29th Sha'ban 1443
+$date2 = new HijriDate(1443, 8, 20); // 20th Sha'ban 1443
+$date->diffInDays($date2);           // 9
 ```
 
 Note that all calculations are subject to the following caveats:
 - **All months are assumed to have 30 days each.** This is not true in practice, of course. Therefore, these functions are not expected to return accurate results if the month rolls over during the calculation.
-- If the HijriDate was created from a Gregorian date, running a calculation method on the object will **clear the Gregorian date**.
 
 ### Comparisons
 
