@@ -105,7 +105,7 @@ The following options are supported with `$date->format()`:
 | Option | Description | Example |
 | --- | --- | --- |
 | d | Day of month (with leading zero) | 01 ... 30 |
-| D | Weekday (short)* | Sun ... Sat |
+| D | Weekday (short) | Sun ... Sat |
 | j | Day of month (without leading zero) | 1 ... 30 |
 | l<br>(lowercase L) | Weekday | Sunday ... Saturday |
 | F | Month | Muharram ... Dhul-Hijja |
