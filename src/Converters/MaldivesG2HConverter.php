@@ -79,13 +79,14 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
     public function getHijriFromGregorian(Carbon $gregorian): HijriDate
     {
         $gregorian->setTimezone('+5:00');   // Ensure it is in MVT
+        $gregorian->startOfDay();           // Ensure it is at midnight (so time does not affect diffInDays())
         $data = $this->getData();
 
         // Find the closest date in the map (the array is already sorted in ascending order)
         $closestDate = null;
         $closestDateDiff = null;
         foreach ($data as $hijriDate => $gregorianDate) {
-            $diff = Carbon::parse($gregorianDate)->diffInDays($gregorian, false);
+            $diff = Carbon::parse($gregorianDate, '+5:00')->diffInDays($gregorian, false);
             if ($diff < 0) {
                 // Subtracting does not work because YYYY-MM-01 minus 1 day
                 // always results in YYYY-MM-30, which is sometimes wrong.
@@ -148,7 +149,7 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
             // - use your own converter class in config('hijri.conversion.converter') that handles older dates
         }
 
-        $closestDate = Carbon::parse($closestDate);
+        $closestDate = Carbon::parse($closestDate, '+5:00');
         $closestDate->addDays($closestDateDiff);
         return $closestDate;
     }
