@@ -5,22 +5,20 @@ namespace Remls\HijriDate\Traits;
 use Remls\HijriDate\HijriDate;
 use OutOfRangeException;
 
-/**
- * All calculation methods assume all months have 30 days.
- * This isn't true in practice, of course.
- * For exact calculations (using the corresponding Gregorian date),
- * use the *Exact() versions of these methods.
- */
 trait Calculations
 {
     /**
      * Add specified amount of days.
      * 
      * @param int $daysToAdd
+     * @param bool $useGregorian Use converted Gregorian date to return a more accurate result.
      * @return \Remls\HijriDate\HijriDate
      */
-    public function addDays(int $daysToAdd = 1): HijriDate
+    public function addDays(int $daysToAdd = 1, bool $useGregorian = true): HijriDate
     {
+        if ($useGregorian)
+            return $this->addDaysExact($daysToAdd);
+
         if ($daysToAdd < 0)
             return $this->subDays(abs($daysToAdd));
 
@@ -59,10 +57,14 @@ trait Calculations
      * Subtract specified amount of days.
      *
      * @param int $daysToSubtract
+     * @param bool $useGregorian Use converted Gregorian date to return a more accurate result.
      * @return \Remls\HijriDate\HijriDate
      */
-    public function subDays(int $daysToSubtract = 1): HijriDate
+    public function subDays(int $daysToSubtract = 1, bool $useGregorian = true): HijriDate
     {
+        if ($useGregorian)
+            return $this->subDaysExact($daysToSubtract);
+
         if ($daysToSubtract < 0)
             return $this->addDays(abs($daysToSubtract));
 
@@ -102,10 +104,14 @@ trait Calculations
      * 
      * @param \Remls\HijriDate\HijriDate $other
      * @param bool $absolute Get absolute value of the difference
+     * @param bool $useGregorian Use converted Gregorian date to return a more accurate result.
      * @return int
      */
-    public function diffInDays(HijriDate $other, bool $absolute = true): int
+    public function diffInDays(HijriDate $other, bool $absolute = true, bool $useGregorian = true): int
     {
+        if ($useGregorian)
+            return $this->diffInDaysExact($other, $absolute);
+
         $comparison = $this->compareWith($other);
         if ($comparison === 0) {
             // The dates are equal

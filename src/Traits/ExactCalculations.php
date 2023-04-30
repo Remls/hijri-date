@@ -7,8 +7,7 @@ use Remls\HijriDate\HijriDate;
 trait ExactCalculations
 {
     /**
-     * Add specified amount of days.
-     * Uses Gregorian date for calculation to give a more accurate result than addDays().
+     * Add specified amount of days. Uses Gregorian dates for calculation.
      * 
      * @param int $daysToAdd
      * @return \Remls\HijriDate\HijriDate
@@ -29,8 +28,7 @@ trait ExactCalculations
     }
 
     /**
-     * Subtract specified amount of days.
-     * Uses Gregorian date for calculation to give a more accurate result than subDays().
+     * Subtract specified amount of days. Uses Gregorian dates for calculation.
      *
      * @param int $daysToSubtract
      * @return \Remls\HijriDate\HijriDate
@@ -51,8 +49,7 @@ trait ExactCalculations
     }
 
     /**
-     * Get the difference in days between this and another HijriDate.
-     * Uses Gregorian date for calculation to give a more accurate result than diffInDays().
+     * Get the difference in days between this and another HijriDate. Uses Gregorian dates for calculation.
      * 
      * @param \Remls\HijriDate\HijriDate $other
      * @param bool $absolute Get absolute value of the difference

@@ -110,7 +110,7 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
         }
 
         $closestDate = HijriDate::parse($closestDate);
-        $closestDate->addDays($closestDateDiff);
+        $closestDate->addDays($closestDateDiff, false);
         return $closestDate;
     }
 
@@ -128,7 +128,7 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
         $closestDate = null;
         $closestDateDiff = null;
         foreach ($data as $hijriDate => $gregorianDate) {
-            $diff = HijriDate::parse($hijriDate)->diffInDays($hijri, false);
+            $diff = HijriDate::parse($hijriDate)->diffInDays($hijri, false, false);
             if ($diff < 0) {
                 // Kept for consistency with getHijriFromGregorian()
                 break;

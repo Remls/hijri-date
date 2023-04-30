@@ -13,12 +13,19 @@ use Remls\HijriDate\Traits\Formatting;
 use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
 
 /**
- * @method  HijriDate   addDays(int $daysToAdd = 1)             Add specified amount of days.
- * @method  HijriDate   subDays(int $daysToSubtract = 1)        Subtract specified amount of days.
- * @method  int         diffInDays(HijriDate $other, bool $absolute = true)     Get the difference in days between this and another HijriDate.
- * @method  HijriDate   addDaysExact(int $daysToAdd = 1)        Add specified amount of days. Uses Gregorian dates for calculation.
- * @method  HijriDate   subDaysExact(int $daysToSubtract = 1)   Subtract specified amount of days. Uses Gregorian dates for calculation.
- * @method  int         diffInDaysExact(HijriDate $other, bool $absolute = true)     Get the difference in days between this and another HijriDate. Uses Gregorian dates for calculation.
+ * @method  HijriDate   addDays(int $daysToAdd = 1, bool $useGregorian = true)
+ *      Add specified amount of days.
+ * @method  HijriDate   subDays(int $daysToSubtract = 1, bool $useGregorian = true)
+ *      Subtract specified amount of days.
+ * @method  int         diffInDays(HijriDate $other, bool $absolute = true, bool $useGregorian = true)
+ *      Get the difference in days between this and another HijriDate.
+ * @method  HijriDate   addDaysExact(int $daysToAdd = 1)
+ *      Add specified amount of days. Uses Gregorian dates for calculation.
+ * @method  HijriDate   subDaysExact(int $daysToSubtract = 1)
+ *      Subtract specified amount of days. Uses Gregorian dates for calculation.
+ * @method  int         diffInDaysExact(HijriDate $other, bool $absolute = true)
+ *      Get the difference in days between this and another HijriDate. Uses Gregorian dates for calculation.
+ * 
  * @method  int         compareWith(HijriDate $other)           Compare this with another HijriDate.
  * @method  bool        equalTo(HijriDate $other)               Check if this is equal to another HijriDate.
  * @method  bool        greaterThan(HijriDate $other)           Check if this is greater than another HijriDate.

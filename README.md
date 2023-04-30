@@ -69,15 +69,10 @@ You may customize how dates are converted by:
 ```php
 $date = new HijriDate(1443, 9, 1);   // 1st Ramadan 1443
 $date->addDays(1);                   // 2nd Ramadan 1443
-$date->subDays(3);                   // 29th Sha'ban 1443
+$date->subDays(3);                   // 28th Sha'ban 1443
 $date2 = new HijriDate(1443, 8, 20); // 20th Sha'ban 1443
-$date->diffInDays($date2);           // 9
+$date->diffInDays($date2);           // 8
 ```
-
-Note that all calculations are subject to the following caveats:
-
-- **All months are assumed to have 30 days each.** This is not true in practice, of course. Therefore, these functions are not expected to return accurate results if the month rolls over during the calculation.
-- For a more accurate result that converts to Gregorian first before doing the calculation, use `addDaysExact`/`subDaysExact`/`diffInDaysExact`.
 
 ### Comparisons
 
@@ -200,3 +195,5 @@ The package no longer uses estimates when converting from Hijri to Gregorian by 
 - The function `isEstimate` has been **REMOVED**. There is no more need to check if the date was made from an estimate, as you can now always just get the corresponding Gregorian date with a call to `getGregorianDate`, regardless of how it was created.
 - The function `getEstimatedFrom` has been **REMOVED** in favour of `getGregorianDate`.
 - The function `resetEstimation` has been **REMOVED** in favour of `resetGregorianDate`.
+- The functions `addDays` and `subDays` will now use the underlying Gregorian date by default for calculations.
+  - To maintain the same behaviour as before, pass `false` to `$useGregorian` parameter of these functions.
