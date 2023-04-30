@@ -33,7 +33,6 @@ php artisan vendor:publish --provider="Remls\HijriDate\HijriDateServiceProvider"
 All of the following methods return an instance of `Remls\HijriDate\HijriDate`.
 
 ```php
-use Remls\HijriDate\HijriDate;
 use Carbon\Carbon;
 
 new HijriDate();                    // 1st Muharram 1000
@@ -44,7 +43,7 @@ HijriDate::parse('1443-09-01');     // 1st Ramadan 1443
 HijriDate::createFromGregorian();              // Today's date
 HijriDate::createFromGregorian('1991-12-01');  // 20th Jumada al-Ula 1412
 $input = Carbon::parse('2002-03-04');
-HijriDate::createFromGregorian($input);        // 20th Dhul-Hijja 1422
+HijriDate::createFromGregorian($input);        // 12th Dhul-Hijja 1422
 ```
 
 ### Customizing how dates are converted between Hijri and Gregorian
@@ -68,8 +67,6 @@ You may customize how dates are converted by:
 ### Calculations
 
 ```php
-use Remls\HijriDate\HijriDate;
-
 $date = new HijriDate(1443, 9, 1);   // 1st Ramadan 1443
 $date->addDays(1);                   // 2nd Ramadan 1443
 $date->subDays(3);                   // 29th Sha'ban 1443
@@ -121,8 +118,6 @@ The following options are supported with `$date->format()`:
 | y                  | Year (final two digits)              | 00 ... 99               |
 
 ```php
-use Remls\HijriDate\HijriDate;
-
 $date = new HijriDate(1443, 9, 1);  // 1st Ramadan 1443
 $date->format("F");                 // "ރަމަޟާން" (using default locale 'dv')
 
@@ -138,7 +133,6 @@ The field to be cast must be a string field on database.
 
 ```php
 // App/Models/YourModel.php
-use Remls\HijriDate\HijriDate;
 
 class YourModel
 {

@@ -1,6 +1,6 @@
 {
   "name": "remls/hijri-date",
-  "description": "Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Bengali, Dhivehi and English.",
+  "description": "Laravel helper package for Hijri dates.",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -24,9 +24,6 @@
       "providers": [
         "Remls\\HijriDate\\HijriDateServiceProvider"
       ]
-    },
-    "aliases": {
-      "HijriDate": "Remls\\HijriDate\\Facades\\HijriDate"
     }
   }
 }

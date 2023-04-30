@@ -3,15 +3,14 @@
 namespace Remls\HijriDate;
 
 use Illuminate\Support\ServiceProvider;
-use Remls\HijriDate\Facades\HijriDate;
 
 class HijriDateServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->bind('hijri_date', function ($app) {
-            return new HijriDate();
-        });
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $loader->alias('HijriDate', \Remls\HijriDate\HijriDate::class);
+        
         $this->mergeConfigFrom(__DIR__ . '/../config/hijri.php', 'hijri');
     }
 
