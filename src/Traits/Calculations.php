@@ -8,6 +8,8 @@ use OutOfRangeException;
 /**
  * All calculation methods assume all months have 30 days.
  * This isn't true in practice, of course.
+ * For exact calculations (using the corresponding Gregorian date),
+ * use the *Exact() versions of these methods.
  */
 trait Calculations
 {

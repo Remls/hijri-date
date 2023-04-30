@@ -7,6 +7,7 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Contracts\Database\Eloquent\SerializesCastableAttributes;
 use InvalidArgumentException;
 use Remls\HijriDate\Traits\Calculations;
+use Remls\HijriDate\Traits\ExactCalculations;
 use Remls\HijriDate\Traits\Comparisons;
 use Remls\HijriDate\Traits\Formatting;
 use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
@@ -15,6 +16,9 @@ use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
  * @method  HijriDate   addDays(int $daysToAdd = 1)             Add specified amount of days.
  * @method  HijriDate   subDays(int $daysToSubtract = 1)        Subtract specified amount of days.
  * @method  int         diffInDays(HijriDate $other, bool $absolute = true)     Get the difference in days between this and another HijriDate.
+ * @method  HijriDate   addDaysExact(int $daysToAdd = 1)        Add specified amount of days. Uses Gregorian dates for calculation.
+ * @method  HijriDate   subDaysExact(int $daysToSubtract = 1)   Subtract specified amount of days. Uses Gregorian dates for calculation.
+ * @method  int         diffInDaysExact(HijriDate $other, bool $absolute = true)     Get the difference in days between this and another HijriDate. Uses Gregorian dates for calculation.
  * @method  int         compareWith(HijriDate $other)           Compare this with another HijriDate.
  * @method  bool        equalTo(HijriDate $other)               Check if this is equal to another HijriDate.
  * @method  bool        greaterThan(HijriDate $other)           Check if this is greater than another HijriDate.
@@ -30,7 +34,7 @@ use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
  */
 class HijriDate implements CastsAttributes, SerializesCastableAttributes
 {
-    use Calculations, Comparisons, Formatting;
+    use Calculations, ExactCalculations, Comparisons, Formatting;
 
     const MUHARRAM      = 1;
     const SAFAR         = 2;
@@ -138,7 +142,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
         
         $hijri = self::getConverter()->getHijriFromGregorian($gregorian);
-        $hijri->gregorianDate = $gregorian;
+        $hijri->setGregorianDate($gregorian);
         return $hijri;
     }
 
@@ -209,6 +213,13 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
             $this->gregorianDate = self::getConverter()->getGregorianFromHijri($this);
         }
         return $this->gregorianDate;
+    }
+
+    // For internal use.
+    private function setGregorianDate(Carbon $gregorian): HijriDate
+    {
+        $this->gregorianDate = $gregorian;
+        return $this;
     }
 
     public function resetGregorianDate(): HijriDate

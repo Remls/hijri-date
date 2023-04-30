@@ -77,6 +77,7 @@ $date->diffInDays($date2);           // 9
 
 Note that all calculations are subject to the following caveats:
 - **All months are assumed to have 30 days each.** This is not true in practice, of course. Therefore, these functions are not expected to return accurate results if the month rolls over during the calculation.
+- For a more accurate result that converts to Gregorian first before doing the calculation, use `addDaysExact`/`subDaysExact`/`diffInDaysExact`.
 
 ### Comparisons
 
