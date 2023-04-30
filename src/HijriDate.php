@@ -85,10 +85,10 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         ?string $locale = null
     ) {
         // Use defaults if null
-        if (! $year)    $year = config('hijri.year_min', self::FALLBACK_YEAR_MIN);
-        if (! $month)   $month = self::MONTH_MIN;
-        if (! $day)     $day = self::DAY_MIN;
-        if (! $locale)  $locale = config('hijri.default_locale', self::FALLBACK_DEFAULT_LOCALE);
+        if (!$year)    $year = config('hijri.year_min', self::FALLBACK_YEAR_MIN);
+        if (!$month)   $month = self::MONTH_MIN;
+        if (!$day)     $day = self::DAY_MIN;
+        if (!$locale)  $locale = config('hijri.default_locale', self::FALLBACK_DEFAULT_LOCALE);
 
         $this->setYear($year);
         $this->setMonth($month);
@@ -119,7 +119,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
      */
     public static function parse(string $hijri): HijriDate
     {
-        if (! self::isParsable($hijri))
+        if (!self::isParsable($hijri))
             throw new InvalidArgumentException("This date cannot be parsed as a Hijri date: $hijri");
 
         $dateParts = explode("-", $hijri);
@@ -140,7 +140,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     {
         if (is_null($gregorian)) $gregorian = now();
         if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
-        
+
         $hijri = self::getConverter()->getHijriFromGregorian($gregorian);
         $hijri->setGregorianDate($gregorian);
         return $hijri;
@@ -199,7 +199,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     public function setLocale(string $locale): HijriDate
     {
         $supportedLocales = config('hijri.supported_locales');
-        if (! in_array($locale, $supportedLocales)) {
+        if (!in_array($locale, $supportedLocales)) {
             $localesList = implode(", ", $supportedLocales);
             throw new InvalidArgumentException("Invalid locale. Supported values: $localesList");
         }
@@ -209,7 +209,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
 
     public function getGregorianDate(): ?Carbon
     {
-        if (! $this->gregorianDate) {
+        if (!$this->gregorianDate) {
             $this->gregorianDate = self::getConverter()->getGregorianFromHijri($this);
         }
         return $this->gregorianDate;
@@ -234,11 +234,11 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
             'hijri.conversion.converter',
             \Remls\HijriDate\Converters\MaldivesG2HConverter::class
         );
-        if (! class_exists($converter))
+        if (!class_exists($converter))
             throw new InvalidArgumentException("Invalid converter class: $converter");
-        if (! in_array(GregorianToHijriConverter::class, class_implements($converter)))
+        if (!in_array(GregorianToHijriConverter::class, class_implements($converter)))
             throw new InvalidArgumentException("Converter class must implement GregorianToHijriConverter: $converter");
-        
+
         return new $converter();
     }
 

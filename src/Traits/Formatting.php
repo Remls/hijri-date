@@ -12,7 +12,7 @@ trait Formatting
      */
     public function translate(string $key): string
     {
-        return trans('hijri::'.$key, [], $this->locale);
+        return trans('hijri::' . $key, [], $this->locale);
     }
 
     /**
@@ -26,7 +26,7 @@ trait Formatting
     {
         $returnString = "";
         $formatChars = mb_str_split($format);
-        for ($i = 0; $i < count($formatChars); $i++) { 
+        for ($i = 0; $i < count($formatChars); $i++) {
             switch ($formatChars[$i]) {
                 /** day */
                 case 'd':   // Day of month with leading zero
@@ -34,27 +34,27 @@ trait Formatting
                     break;
                 case 'D':   // Weekday (short)
                     $dayOfWeek = $this->getGregorianDate()->dayOfWeek;   // 0 for Sun ... 6 for Sat
-                    $returnString .= $this->translate('formatting.weekdays_short.'.$dayOfWeek);
+                    $returnString .= $this->translate('formatting.weekdays_short.' . $dayOfWeek);
                     break;
                 case 'j':   // Day of month without leading zero
                     $returnString .= $this->day;
                     break;
                 case 'l':   // Weekday
                     $dayOfWeek = $this->getGregorianDate()->dayOfWeek;   // 0 for Sun ... 6 for Sat
-                    $returnString .= $this->translate('formatting.weekdays.'.$dayOfWeek);
+                    $returnString .= $this->translate('formatting.weekdays.' . $dayOfWeek);
                     break;
                 // case 'S':   // Ordinal
                 //     break;
-        
+
                 /** month */
                 case 'F':   // Month
-                    $returnString .= $this->translate('formatting.months.'.$this->month);
-                    break; 
+                    $returnString .= $this->translate('formatting.months.' . $this->month);
+                    break;
                 case 'm':   // Month (int value, with leading zero)
                     $returnString .= str_pad($this->month, 2, "0", STR_PAD_LEFT);
                     break;
                 case 'M':   // Month (short)
-                    $returnString .= $this->translate('formatting.months_short.'.$this->month);
+                    $returnString .= $this->translate('formatting.months_short.' . $this->month);
                     break;
                 case 'n':   // Month (int value, without leading zero)
                     $returnString .= $this->month;
@@ -72,7 +72,7 @@ trait Formatting
                     if ($i < count($formatChars) - 1) {
                         $i++;
                     }
-        
+
                 default:
                     $returnString .= $formatChars[$i];
                     break;
@@ -114,9 +114,9 @@ trait Formatting
     private static function transformNumerals(string $input, string $locale): string
     {
         $inputChars = mb_str_split($input);
-        for ($i = 0; $i < count($inputChars); $i++) { 
+        for ($i = 0; $i < count($inputChars); $i++) {
             if (is_numeric($inputChars[$i])) {
-                $inputChars[$i] = trans('hijri::formatting.numerals.'.$inputChars[$i], [], $locale);
+                $inputChars[$i] = trans('hijri::formatting.numerals.' . $inputChars[$i], [], $locale);
             }
         }
         return implode("", $inputChars);

@@ -23,6 +23,7 @@ composer require remls/hijri-date
 ```
 
 To publish configuration files:
+
 ```sh
 php artisan vendor:publish --provider="Remls\HijriDate\HijriDateServiceProvider" --tag="config"
 ```
@@ -57,6 +58,7 @@ You may manually re-fetch data from the external source by running `php artisan 
 The package also comes with an alternative class for converting dates using calculations instead of a map. You may enable it by changing `config/hijri.php` > `conversion.converter` to `\Remls\HijriDate\Converters\MaldivesEstimateG2HConverter::class`.
 
 You may customize how dates are converted by:
+
 - providing your own map in `config/hijri.php` > `conversion.data_url`
 - providing your own custom converter class in `config/hijri.php` > `conversion.converter`
   - The class must implement `\Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter`.
@@ -76,6 +78,7 @@ $date->diffInDays($date2);           // 9
 ```
 
 Note that all calculations are subject to the following caveats:
+
 - **All months are assumed to have 30 days each.** This is not true in practice, of course. Therefore, these functions are not expected to return accurate results if the month rolls over during the calculation.
 - For a more accurate result that converts to Gregorian first before doing the calculation, use `addDaysExact`/`subDaysExact`/`diffInDaysExact`.
 
@@ -83,38 +86,39 @@ Note that all calculations are subject to the following caveats:
 
 You may compare two HijriDate objects `$a` and `$b` using the following methods:
 
-| Method | Description |
-| --- | --- |
-| `$a->compareWith($b)` | Returns -1 if $a < $b.<br>Returns 0 if $a == $b.<br>Returns 1 if $a > $b. |
-| `$a->equalTo($b)` | Returns true if $a == $b. |
-| `$a->greaterThan($b)` | Returns true if $a > $b (a is after b). |
-| `$a->lessThan($b)` | Returns true if $a < $b (a is before b). |
-| `$a->greaterThanOrEqualTo($b)` | Returns true if $a >= $b (a is after or equal to b). |
-| `$a->lessThanOrEqualTo($b)` | Returns true if $a <= $b (a is before or equal to b). |
+| Method                         | Description                                                               |
+| ------------------------------ | ------------------------------------------------------------------------- |
+| `$a->compareWith($b)`          | Returns -1 if $a < $b.<br>Returns 0 if $a == $b.<br>Returns 1 if $a > $b. |
+| `$a->equalTo($b)`              | Returns true if $a == $b.                                                 |
+| `$a->greaterThan($b)`          | Returns true if $a > $b (a is after b).                                   |
+| `$a->lessThan($b)`             | Returns true if $a < $b (a is before b).                                  |
+| `$a->greaterThanOrEqualTo($b)` | Returns true if $a >= $b (a is after or equal to b).                      |
+| `$a->lessThanOrEqualTo($b)`    | Returns true if $a <= $b (a is before or equal to b).                     |
 
 ### Formatting
 
 Each HijriDate object will have a set locale when it is created. This locale will be used for formatting.
 
 The locale is `'dv'` by default, but you may customize it by:
+
 - passing locale in constructor (eg: `new HijriDate(1443, 9, 1, 'en')`)
 - changing locale after creation (eg: `$date->setLocale('en')`)
 - changing `default_locale` in configuration, so all HijriDate objects are created using that default locale
 
 The following options are supported with `$date->format()`:
 
-| Option | Description | Example |
-| --- | --- | --- |
-| d | Day of month (with leading zero) | 01 ... 30 |
-| D | Weekday (short) | Sun ... Sat |
-| j | Day of month (without leading zero) | 1 ... 30 |
-| l<br>(lowercase L) | Weekday | Sunday ... Saturday |
-| F | Month | Muharram ... Dhul-Hijja |
-| m | Month (number, with leading zero) | 01 ... 12 |
-| M | Month (short) | Mhr ... DhH |
-| n | Month (number, without leading zero) | 1 ... 12 |
-| Y | Year | 1000 ... 1999 |
-| y | Year (final two digits) | 00 ... 99 |
+| Option             | Description                          | Example                 |
+| ------------------ | ------------------------------------ | ----------------------- |
+| d                  | Day of month (with leading zero)     | 01 ... 30               |
+| D                  | Weekday (short)                      | Sun ... Sat             |
+| j                  | Day of month (without leading zero)  | 1 ... 30                |
+| l<br>(lowercase L) | Weekday                              | Sunday ... Saturday     |
+| F                  | Month                                | Muharram ... Dhul-Hijja |
+| m                  | Month (number, with leading zero)    | 01 ... 12               |
+| M                  | Month (short)                        | Mhr ... DhH             |
+| n                  | Month (number, without leading zero) | 1 ... 12                |
+| Y                  | Year                                 | 1000 ... 1999           |
+| y                  | Year (final two digits)              | 00 ... 99               |
 
 ```php
 use Remls\HijriDate\HijriDate;
@@ -127,7 +131,6 @@ $date->format("F Y");               // "رمضان 1443"
 // Use numerals from locale
 $date->format("F Y", true);         // "رمضان ١٤٤٣"
 ```
-
 
 ## Casting
 
@@ -153,6 +156,7 @@ This will automatically store data as `Y-m-d` string in database, and cast to `R
 ## Validation
 
 Any string that passes the following conditions is considered a valid Hijri date:
+
 - in the format `Y-m-d`
 - year between 1000 and 1999 (This can be changed in config.)
 - month between 1 and 12
@@ -172,6 +176,7 @@ Note that validation error messages will use app's locale (unlike formatting).
 ## Localization
 
 Publish translation files by using:
+
 ```sh
 php artisan vendor:publish --provider="Remls\HijriDate\HijriDateServiceProvider" --tag="lang"
 ```
@@ -181,6 +186,7 @@ You may then customize strings as needed.
 ### Adding a language
 
 To add support for another language:
+
 1. Publish the configuration file. The file will be copied to `config/hijri.php`.
 2. Publish the translation files. The files will be copied to `lang/vendor/hijri`.
 3. Copy one of the existing translation folders, and rename it with the language code of your choice. Eg: `lang/vendor/hijri/es`
@@ -191,6 +197,7 @@ To add support for another language:
 ## Migrating from v1 to v2
 
 The package no longer uses estimates when converting from Hijri to Gregorian by default.
+
 - New keys have been added to `config/hijri.php`. You may need to update your configuration file.
 - The function `getEstimateFromGregorian` has been **REMOVED** in favour of `createFromGregorian`.
   - To maintain the same behaviour as before:
