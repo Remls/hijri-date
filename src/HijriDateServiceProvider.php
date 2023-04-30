@@ -12,6 +12,8 @@ class HijriDateServiceProvider extends ServiceProvider
         $loader->alias('HijriDate', \Remls\HijriDate\HijriDate::class);
         
         $this->mergeConfigFrom(__DIR__ . '/../config/hijri.php', 'hijri');
+
+        require_once __DIR__ . '/helpers.php';
     }
 
     public function boot()
