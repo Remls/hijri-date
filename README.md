@@ -7,6 +7,7 @@ Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Ben
 - [Creating dates](#creating-dates)
   - [Customizing how dates are converted between Hijri and Gregorian](#customizing-how-dates-are-converted-between-hijri-and-gregorian)
 - [Available methods](#available-methods)
+  - [Conversions](#conversions)
   - [Calculations](#calculations)
   - [Comparisons](#comparisons)
   - [Formatting](#formatting)
@@ -64,6 +65,19 @@ You may customize how dates are converted by:
   - The class must implement `\Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter`.
 
 ## Available methods
+
+### Conversions
+
+```php
+// Gregorian to Hijri
+HijriDate::createFromGregorian('1991-12-01'); // returns HijriDate
+
+// Hijri to Gregorian
+$date = new HijriDate(1443, 9, 1);
+$date->getGregorianDate();                    // returns Carbon
+```
+
+You may customise how the conversion works, as detailed [here](#customizing-how-dates-are-converted-between-hijri-and-gregorian).
 
 ### Calculations
 
