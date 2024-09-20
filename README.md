@@ -42,7 +42,7 @@ HijriDate::parse('1443-09-01');     // 1st Ramadan 1443
 
 // From Gregorian
 HijriDate::createFromGregorian();              // Today's date
-today_hijri()                                  // Today's date
+today_hijri();                                 // Today's date
 HijriDate::createFromGregorian('1991-12-01');  // 20th Jumada al-Ula 1412
 $input = Carbon::parse('2002-03-04');
 HijriDate::createFromGregorian($input);        // 12th Dhul-Hijja 1422
