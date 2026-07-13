@@ -3,6 +3,8 @@
 
 Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Bengali, Dhivehi and English out of the box, with support for further customizations or adding a language of your choice.
 
+A demo of some of the package's capabilities is available at https://hijri.remls.io.
+
 - [Installation](#installation)
 - [Creating dates](#creating-dates)
   - [Customizing how dates are converted between Hijri and Gregorian](#customizing-how-dates-are-converted-between-hijri-and-gregorian)
