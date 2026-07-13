@@ -5,7 +5,12 @@ Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Ben
 
 A demo of some of the package's capabilities is available at https://hijri.remls.io.
 
-[![Today's Hijri date](https://hijri.remls.io/og.png?x=2)](https://hijri.remls.io)
+[![Today's Hijri date, rendered live by the demo](https://hijri.remls.io/og.png)](https://hijri.remls.io)
+
+> [!WARNING]
+> This package was built *primarily for use in Maldives*: the default language is Dhivehi, and the default calendar is a custom mapping of dates specifically for Maldives. [(Why?)](https://github.com/Remls/hijri-date/pull/7#issuecomment-3273063713)
+> 
+> However, this can all be customised for your specific needs; read further for how to do so.
 
 - [Installation](#installation)
 - [Creating dates](#creating-dates)
