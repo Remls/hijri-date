@@ -5,6 +5,8 @@ Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Ben
 
 A demo of some of the package's capabilities is available at https://hijri.remls.io.
 
+[![Today's Hijri date](https://hijri.remls.io/og.png?x=2)](https://hijri.remls.io)
+
 - [Installation](#installation)
 - [Creating dates](#creating-dates)
   - [Customizing how dates are converted between Hijri and Gregorian](#customizing-how-dates-are-converted-between-hijri-and-gregorian)
