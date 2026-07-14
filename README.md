@@ -1,7 +1,7 @@
 <!-- omit in toc -->
 # HijriDate
 
-Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Bengali, Dhivehi and English out of the box, with support for further customizations or adding a language of your choice.
+Laravel helper package for Hijri dates. Supports displaying dates in Arabic, Bengali, Dhivehi, English, Indonesian, Malay and Urdu out of the box, with support for further customizations or adding a language of your choice.
 
 A demo of some of the package's capabilities is available at https://hijri.remls.io.
 
