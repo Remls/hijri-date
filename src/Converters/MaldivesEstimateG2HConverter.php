@@ -10,6 +10,8 @@ use IntlCalendar;
 
 class MaldivesEstimateG2HConverter implements GregorianToHijriConverter
 {
+    private const TIMEZONE = '+5:00';
+
     /**
      * Get the HijriDate object from a Gregorian date.
      * 
@@ -18,8 +20,8 @@ class MaldivesEstimateG2HConverter implements GregorianToHijriConverter
      */
     public function getHijriFromGregorian(Carbon $gregorian): HijriDate
     {
-        $gregorian->setTimezone('+5:00');   // Ensure it is in MVT
-        $gregorian->startOfDay();           // Ensure it is at midnight (so time does not affect diffInDays())
+        // Work with a copy, normalized to MVT midnight (so time does not affect the result)
+        $gregorian = $gregorian->copy()->setTimezone(self::TIMEZONE)->startOfDay();
         $formatter = IntlDateFormatter::create(
             'en_US',
             IntlDateFormatter::FULL,
@@ -69,6 +71,6 @@ class MaldivesEstimateG2HConverter implements GregorianToHijriConverter
 
         $gregorianYear = $cc - 4716;
 
-        return Carbon::create($gregorianYear, $gregorianMonth, $gregorianDay, 0, 0, 0, '+5:00');
+        return Carbon::create($gregorianYear, $gregorianMonth, $gregorianDay, 0, 0, 0, self::TIMEZONE);
     }
 }

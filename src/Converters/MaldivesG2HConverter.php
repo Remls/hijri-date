@@ -12,6 +12,7 @@ use Throwable;
 
 class MaldivesG2HConverter implements GregorianToHijriConverter
 {
+    private const TIMEZONE = '+5:00';
     private const CSV_HEADERS = ['hijri_y', 'hijri_m', 'gregorian_y', 'gregorian_m', 'gregorian_d'];
 
     private string $dataUrl;
@@ -123,28 +124,16 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
      */
     public function getHijriFromGregorian(Carbon $gregorian): HijriDate
     {
-        $gregorian->setTimezone('+5:00');   // Ensure it is in MVT
-        $gregorian->startOfDay();           // Ensure it is at midnight (so time does not affect diffInDays())
+        // Work with a copy, normalized to MVT midnight (so time does not affect diffInDays())
+        $gregorian = $gregorian->copy()->setTimezone(self::TIMEZONE)->startOfDay();
         $data = $this->getData();
 
-        // Find the closest date in the map (the array is already sorted in ascending order)
-        $closestDate = null;
-        $closestDateDiff = null;
-        foreach ($data as $hijriDate => $gregorianDate) {
-            $diff = Carbon::parse($gregorianDate, '+5:00')->diffInDays($gregorian, false);
-            if ($diff < 0) {
-                // Subtracting does not work because YYYY-MM-01 minus 1 day
-                // always results in YYYY-MM-30, which is sometimes wrong.
-                // Use the previous date instead.
-                break;
-            }
-            if (is_null($closestDateDiff) || $diff < $closestDateDiff) {
-                $closestDate = $hijriDate;
-                $closestDateDiff = $diff;
-            }
-        }
+        // Find the closest date on or before the target (the array is already sorted in ascending order)
+        $hijriDates = array_keys($data);
+        $gregorianDates = array_values($data);
+        $index = self::findFloorIndex($gregorianDates, $gregorian->format('Y-m-d'));
         // Date is too old to be found in the map
-        if (is_null($closestDate)) {
+        if (is_null($index)) {
             $dateDisplay = $gregorian->format('d M Y');
             throw new InvalidArgumentException("Date is too old to be converted ($dateDisplay).");
             // To resolve, do one of the following:
@@ -154,7 +143,8 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
             // - use your own converter class in config('hijri.conversion.converter') that handles older dates
         }
 
-        $closestDate = HijriDate::parse($closestDate);
+        $closestDate = HijriDate::parse($hijriDates[$index]);
+        $closestDateDiff = Carbon::parse($gregorianDates[$index], self::TIMEZONE)->diffInDays($gregorian, false);
         $closestDate->addDays($closestDateDiff, false);
         return $closestDate;
     }
@@ -169,22 +159,11 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
     {
         $data = $this->getData();
 
-        // Find the closest date in the map (the array is already sorted in ascending order)
-        $closestDate = null;
-        $closestDateDiff = null;
-        foreach ($data as $hijriDate => $gregorianDate) {
-            $diff = HijriDate::parse($hijriDate)->diffInDays($hijri, false, false);
-            if ($diff < 0) {
-                // Kept for consistency with getHijriFromGregorian()
-                break;
-            }
-            if (is_null($closestDateDiff) || $diff < $closestDateDiff) {
-                $closestDate = $gregorianDate;
-                $closestDateDiff = $diff;
-            }
-        }
+        // Find the closest date on or before the target (the array is already sorted in ascending order)
+        $hijriDates = array_keys($data);
+        $index = self::findFloorIndex($hijriDates, $hijri->toDateString());
         // Date is too old to be found in the map
-        if (is_null($closestDate)) {
+        if (is_null($index)) {
             $dateDisplay = $hijri->format('d M Y');
             throw new InvalidArgumentException("Hijri date is too old to be converted ($dateDisplay).");
             // To resolve, do one of the following:
@@ -194,8 +173,34 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
             // - use your own converter class in config('hijri.conversion.converter') that handles older dates
         }
 
-        $closestDate = Carbon::parse($closestDate, '+5:00');
+        $closestDateDiff = HijriDate::parse($hijriDates[$index])->diffInDays($hijri, false, false);
+        $closestDate = Carbon::parse($data[$hijriDates[$index]], self::TIMEZONE);
         $closestDate->addDays($closestDateDiff);
         return $closestDate;
+    }
+
+    /**
+     * Find the index of the greatest value that is less than or equal to $needle,
+     * or null if no such value exists.
+     *
+     * @param string[] $sorted  List of Y-m-d strings, sorted ascending
+     * @param string $needle    Y-m-d string
+     * @return int|null
+     */
+    private static function findFloorIndex(array $sorted, string $needle): ?int
+    {
+        $low = 0;
+        $high = count($sorted) - 1;
+        $result = null;
+        while ($low <= $high) {
+            $mid = intdiv($low + $high, 2);
+            if ($sorted[$mid] <= $needle) {
+                $result = $mid;
+                $low = $mid + 1;
+            } else {
+                $high = $mid - 1;
+            }
+        }
+        return $result;
     }
 }

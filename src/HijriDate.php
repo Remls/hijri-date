@@ -139,7 +139,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
 
     /**
      * Create a HijriDate object from a Gregorian date.
-     * 
+     *
      * @param \Carbon\Carbon|string|null $gregorian      Optional. Uses current time if not passed.
      * @return \Remls\HijriDate\HijriDate
      */
@@ -149,7 +149,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
         if (is_string($gregorian)) $gregorian = Carbon::parse($gregorian);
 
         $hijri = self::getConverter()->getHijriFromGregorian($gregorian);
-        $hijri->setGregorianDate($gregorian);
+        $hijri->setGregorianDate($gregorian->copy());
         return $hijri;
     }
 
