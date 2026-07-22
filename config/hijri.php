@@ -25,7 +25,7 @@ return [
         // Customize from where the conversion mapping data is fetched, and how it is cached ...
         'data_url' => 'https://gist.githubusercontent.com/Remls/b0ebba53bb2a8670f333f8a88de4aae3/raw',
         'cache_key' => 'hijri_to_gregorian_map',
-        'cache_period' => 60 * 24,
+        'cache_period' => 60 * 60 * 6, // 6 hours
 
         // ... or gain full control over how conversion works by defining your own converter class.
         'converter' => \Remls\HijriDate\Converters\MaldivesG2HConverter::class,

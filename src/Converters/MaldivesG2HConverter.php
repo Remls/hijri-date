@@ -21,7 +21,7 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
             throw new InvalidArgumentException('Cannot load G2H map: No data URL specified in config/hijri.php');
         }
         $this->cacheKey = config('hijri.conversion.cache_key', 'hijri_to_gregorian_map');
-        $this->cachePeriod = config('hijri.conversion.cache_period', 60 * 24);
+        $this->cachePeriod = config('hijri.conversion.cache_period', 60 * 60 * 6);
     }
 
     public function getData(): array
