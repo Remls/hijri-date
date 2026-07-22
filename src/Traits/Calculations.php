@@ -3,15 +3,17 @@
 namespace Remls\HijriDate\Traits;
 
 use Remls\HijriDate\HijriDate;
-use OutOfRangeException;
+use InvalidArgumentException;
 
 trait Calculations
 {
     /**
      * Add specified amount of days.
-     * 
+     *
      * @param int $daysToAdd
      * @param bool $useGregorian Use converted Gregorian date to return a more accurate result.
+     *                           If false, assumes all months have 30 days: results are approximate,
+     *                           and may not exist in the actual calendar.
      * @return \Remls\HijriDate\HijriDate
      */
     public function addDays(int $daysToAdd = 1, bool $useGregorian = true): HijriDate
@@ -20,7 +22,7 @@ trait Calculations
             return $this->addDaysExact($daysToAdd);
 
         if ($daysToAdd < 0)
-            return $this->subDays(abs($daysToAdd));
+            return $this->subDays(abs($daysToAdd), $useGregorian);
 
         // Work with copies
         $hYear = $this->year;
@@ -44,7 +46,7 @@ trait Calculations
         }
         $hYear += $yearsToAdd;
         if ($hYear > config('hijri.year_max', self::FALLBACK_YEAR_MAX))
-            throw new OutOfRangeException("Date value out of acceptable range.");
+            throw new InvalidArgumentException("Date value out of acceptable range.");
 
         $this->year = $hYear;
         $this->month = $hMonth;
@@ -58,6 +60,8 @@ trait Calculations
      *
      * @param int $daysToSubtract
      * @param bool $useGregorian Use converted Gregorian date to return a more accurate result.
+     *                           If false, assumes all months have 30 days: results are approximate,
+     *                           and may not exist in the actual calendar.
      * @return \Remls\HijriDate\HijriDate
      */
     public function subDays(int $daysToSubtract = 1, bool $useGregorian = true): HijriDate
@@ -66,7 +70,7 @@ trait Calculations
             return $this->subDaysExact($daysToSubtract);
 
         if ($daysToSubtract < 0)
-            return $this->addDays(abs($daysToSubtract));
+            return $this->addDays(abs($daysToSubtract), $useGregorian);
 
         // Work with copies
         $hYear = $this->year;
@@ -90,7 +94,7 @@ trait Calculations
         }
         $hYear -= $yearsToSubtract;
         if ($hYear < config('hijri.year_min', self::FALLBACK_YEAR_MIN))
-            throw new OutOfRangeException("Date value out of acceptable range.");
+            throw new InvalidArgumentException("Date value out of acceptable range.");
 
         $this->year = $hYear;
         $this->month = $hMonth;
@@ -101,10 +105,12 @@ trait Calculations
 
     /**
      * Get the difference in days between this and another HijriDate.
-     * 
+     *
      * @param \Remls\HijriDate\HijriDate $other
      * @param bool $absolute Get absolute value of the difference
      * @param bool $useGregorian Use converted Gregorian date to return a more accurate result.
+     *                           If false, assumes all months have 30 days (360-day years):
+     *                           results are approximate.
      * @return int
      */
     public function diffInDays(HijriDate $other, bool $absolute = true, bool $useGregorian = true): int
@@ -123,7 +129,7 @@ trait Calculations
             $days += ($other->month - $this->month) * self::DAYS_PER_MONTH;
             $days += $other->day - $this->day;
             return $days;
-        } else if ($comparison === 1) {
+        } else {
             // $this is later than $other
             $days = 0;
             $days += ($this->year - $other->year) * self::DAYS_PER_YEAR;
