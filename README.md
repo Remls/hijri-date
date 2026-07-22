@@ -72,6 +72,20 @@ You may customize how dates are converted by:
 - providing your own map in `config/hijri.php` > `conversion.data_url`
 - providing your own custom converter class in `config/hijri.php` > `conversion.converter`
   - The class must implement `\Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter`.
+- binding your own implementation of `GregorianToHijriConverter` in the service container
+  - This takes precedence over `config/hijri.php` > `conversion.converter`
+  - Example:
+
+```php
+// App/Providers/AppServiceProvider.php
+
+use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
+
+public function register(): void
+{
+    $this->app->singleton(GregorianToHijriConverter::class, fn () => new YourCustomConverter());
+}
+```
 
 ## Available methods
 

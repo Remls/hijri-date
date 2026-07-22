@@ -237,16 +237,7 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
 
     private static function getConverter(): GregorianToHijriConverter
     {
-        $converter = config(
-            'hijri.conversion.converter',
-            \Remls\HijriDate\Converters\MaldivesG2HConverter::class
-        );
-        if (!class_exists($converter))
-            throw new InvalidArgumentException("Invalid converter class: $converter");
-        if (!in_array(GregorianToHijriConverter::class, class_implements($converter)))
-            throw new InvalidArgumentException("Converter class must implement GregorianToHijriConverter: $converter");
-
-        return new $converter();
+        return app(GregorianToHijriConverter::class);
     }
 
     // -- IMPLEMENTED METHODS BELOW THIS LINE --
