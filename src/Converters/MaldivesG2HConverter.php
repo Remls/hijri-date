@@ -144,7 +144,7 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
         }
 
         $closestDate = HijriDate::parse($hijriDates[$index]);
-        $closestDateDiff = Carbon::parse($gregorianDates[$index], self::TIMEZONE)->diffInDays($gregorian, false);
+        $closestDateDiff = (int) round(Carbon::parse($gregorianDates[$index], self::TIMEZONE)->diffInDays($gregorian, false));
         $closestDate->addDays($closestDateDiff, false);
         return $closestDate;
     }

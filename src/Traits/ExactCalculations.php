@@ -55,8 +55,8 @@ trait ExactCalculations
      */
     public function diffInDaysExact(HijriDate $other, bool $absolute = true): int
     {
-        $gregorianThis = $this->getGregorianDate();
-        $gregorianOther = $other->getGregorianDate();
-        return $gregorianThis->diffInDays($gregorianOther, $absolute);
+        $gregorianThis = $this->getGregorianDate()->copy()->startOfDay();
+        $gregorianOther = $other->getGregorianDate()->copy()->startOfDay();
+        return (int) round($gregorianThis->diffInDays($gregorianOther, $absolute));
     }
 }
