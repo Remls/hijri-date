@@ -24,6 +24,7 @@ A demo of some of the package's capabilities is available at https://hijri.remls
 - [Validation](#validation)
 - [Localization](#localization)
   - [Adding a language](#adding-a-language)
+- [Migrating from v2 to v3](#migrating-from-v2-to-v3)
 - [Migrating from v1 to v2](#migrating-from-v1-to-v2)
 
 ## Installation
@@ -222,6 +223,36 @@ To add support for another language:
 4. Change strings to their respective translations.
 5. Add the language code to `supported_locales` in `config/hijri.php`.
 6. (Optional) Change `default_locale` in `config/hijri.php` to the new language code.
+
+## Migrating from v2 to v3
+
+This version mainly addresses stale code and bug fixes, with little to no change in functionality for the vast majority of cases.
+
+Minimum supported Laravel version has been bumped from v8 to v10.
+
+⚠️ denotes new behaviour that could potentially be a breaking change.
+
+### Improvements
+
+- `ValidHijriDate` now implements `Illuminate\Contracts\Validation\ValidationRule` instead of the deprecated `Rule`.
+  - Normal usage (`new ValidHijriDate` in a rules array) is unaffected.
+  - ⚠️ If you called `passes()` or `message()` on the rule directly, or extended the class, update to the new `validate()` method.
+- The map is now fetched with Laravel's HTTP client, with timeouts and a retry.
+  - ⚠️ Network failures throw `Illuminate\Http\Client\ConnectionException` or `RequestException` instead of `RuntimeException`. Invalid map data still throws `RuntimeException`.
+  - `allow_url_fopen` is no longer required.
+  - Fetched data is validated before use, and the last successfully fetched map is kept indefinitely and served as a fallback if a refetch fails.
+- The converter is resolved from the service container as a singleton, instead of being constructed for every conversion.
+  - You can now register your conversion class in `AppServiceProvider` instead of changing `conversion.converter` in config.
+  - ⚠️ Changing `conversion.converter` in config at runtime after the first conversion now has no effect.
+
+### Bug fixes
+
+- `conversion.cache_period` is now set to 6 hours by default. If you have published `config/hijri.php`, update `conversion.cache_period` to `60 * 60 * 6` (optional, leaving as the previous default just means the cache expires more quickly).
+- ⚠️ `Carbon` instances passed into the package are never modified anymore.
+  - Previously, an instance passed to `createFromGregorian()` was silently mutated by the default converter class. It now stays exactly as you created it, and `getGregorianDate()` returns a copy of it as provided.
+- Negative amounts passed to `addDays()` / `subDays()` now stay on the calculation path selected by `$useGregorian`. Previously they always used the Gregorian path.
+- ⚠️ Out-of-range results from `addDays()` / `subDays()` with `$useGregorian = false` now throw `InvalidArgumentException`, consistent with the rest of the package, instead of `OutOfRangeException`.
+- `isParsable()` now checks the year against the configured range, so it no longer returns `true` for strings that `parse()` would then reject.
 
 ## Migrating from v1 to v2
 
