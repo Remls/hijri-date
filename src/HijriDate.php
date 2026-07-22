@@ -115,7 +115,12 @@ class HijriDate implements CastsAttributes, SerializesCastableAttributes
     public static function isParsable($test): bool
     {
         if (!is_string($test)) return false;
-        return preg_match(self::PARSABLE_REGEX, $test) === 1;
+        if (preg_match(self::PARSABLE_REGEX, $test) !== 1) return false;
+
+        $year = (int) explode("-", $test)[0];
+        $max = config('hijri.year_max', self::FALLBACK_YEAR_MAX);
+        $min = config('hijri.year_min', self::FALLBACK_YEAR_MIN);
+        return $year >= $min && $year <= $max;
     }
 
     /**

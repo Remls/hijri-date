@@ -13,6 +13,13 @@ final class ParsingTest extends TestCase
         $this->assertTrue(HijriDate::isParsable('1444-12-30'));
     }
 
+    public function test_is_parsable_rejects_years_outside_configured_range(): void
+    {
+        $this->assertFalse(HijriDate::isParsable('1-01-01'));
+        $this->assertFalse(HijriDate::isParsable('999-01-01'));
+        $this->assertFalse(HijriDate::isParsable('2044-01-01'));
+    }
+
     public function test_is_parsable_rejects_invalid_values(): void
     {
         $this->assertFalse(HijriDate::isParsable('1444-13-01'));
