@@ -86,6 +86,8 @@ $date = new HijriDate(1443, 9, 1);
 $date->getGregorianDate();                    // returns Carbon
 ```
 
+By default, conversions are date-only: any time component on the input is ignored, and input `Carbon` instances are never modified. `getGregorianDate()` returns a copy of the original input (for dates created with `createFromGregorian()`), or a date at midnight in Maldives time (UTC+5), derived on first call.
+
 You may customise how the conversion works, as detailed [here](#customizing-how-dates-are-converted-between-hijri-and-gregorian).
 
 ### Calculations
