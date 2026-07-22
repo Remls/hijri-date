@@ -15,6 +15,9 @@
     "guzzlehttp/guzzle": "^7.5",
     "ext-intl": "*"
   },
+  "require-dev": {
+    "orchestra/testbench": "^8.0 || ^9.0 || ^10.0 || ^11.0"
+  },
   "autoload": {
     "psr-4": {
       "Remls\\HijriDate\\": "src"
@@ -22,6 +25,14 @@
     "files": [
       "src/helpers.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Remls\\HijriDate\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
   },
   "extra": {
     "laravel": {
