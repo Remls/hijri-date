@@ -5,13 +5,18 @@ namespace Remls\HijriDate\Converters;
 use Remls\HijriDate\Converters\Contracts\GregorianToHijriConverter;
 use Remls\HijriDate\HijriDate;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use RuntimeException;
+use Throwable;
 
 class MaldivesG2HConverter implements GregorianToHijriConverter
 {
+    private const CSV_HEADERS = ['hijri_y', 'hijri_m', 'gregorian_y', 'gregorian_m', 'gregorian_d'];
+
     private string $dataUrl;
     private string $cacheKey;
+    private string $fallbackCacheKey;
     private int $cachePeriod;
 
     public function __construct()
@@ -21,39 +26,76 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
             throw new InvalidArgumentException('Cannot load G2H map: No data URL specified in config/hijri.php');
         }
         $this->cacheKey = config('hijri.conversion.cache_key', 'hijri_to_gregorian_map');
+        $this->fallbackCacheKey = $this->cacheKey . '_fallback';
         $this->cachePeriod = config('hijri.conversion.cache_period', 60 * 60 * 6);
     }
 
     public function getData(): array
     {
-        return cache()->remember($this->cacheKey, $this->cachePeriod, function () {
-            return $this->fetchDataFromSource();
-        });
+        $cached = cache()->get($this->cacheKey);
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        try {
+            return $this->refresh();
+        } catch (Throwable $e) {
+            // Serve the last successfully fetched map, if there is one
+            $fallback = cache()->get($this->fallbackCacheKey);
+            if ($fallback !== null) {
+                cache()->put($this->cacheKey, $fallback, $this->cachePeriod);
+                return $fallback;
+            }
+            throw $e;
+        }
     }
 
-    public function fetchDataFromSource()
+    /**
+     * Fetch fresh data from source, and store it in cache.
+     *
+     * @return array
+     */
+    public function refresh(): array
     {
-        // Load data from source
-        $file = file_get_contents($this->dataUrl);
-        if ($file === false) {
-            throw new RuntimeException("Cannot load G2H map: Request to $this->dataUrl failed");
+        $data = $this->fetchDataFromSource();
+        cache()->put($this->cacheKey, $data, $this->cachePeriod);
+        cache()->forever($this->fallbackCacheKey, $data);
+        return $data;
+    }
+
+    public function fetchDataFromSource(): array
+    {
+        $response = Http::connectTimeout(5)
+            ->timeout(15)
+            ->retry(2, 100)
+            ->get($this->dataUrl)
+            ->throw();
+
+        $lines = preg_split('/\R/', trim($response->body()));
+        $headers = str_getcsv(array_shift($lines), ',', '"', '');
+        $missingHeaders = array_diff(self::CSV_HEADERS, $headers);
+        if (!empty($missingHeaders)) {
+            $missingList = implode(', ', $missingHeaders);
+            throw new RuntimeException("Cannot load G2H map: Data is missing expected columns ($missingList)");
         }
 
-        $csv = array_map("str_getcsv", explode("\n", $file));
-        $headers = array_shift($csv);
-        $data = [];
-        foreach ($csv as $row) {
-            $dataRow = [];
-            foreach ($headers as $i => $header) {
-                $dataRow[$header] = $row[$i];
-            }
-            $data[] = $dataRow;
-        }
-
-        // Convert to array format needed
         $padZeroFn = fn ($v) => str_pad($v, 2, '0', STR_PAD_LEFT);
         $result = [];
-        foreach ($data as $row) {
+        foreach ($lines as $line) {
+            if (trim($line) === '') {
+                continue;
+            }
+            $cells = str_getcsv($line, ',', '"', '');
+            if (count($cells) !== count($headers)) {
+                throw new RuntimeException("Cannot load G2H map: Malformed row in data: $line");
+            }
+            $row = array_map('trim', array_combine($headers, $cells));
+            foreach (self::CSV_HEADERS as $column) {
+                if (!ctype_digit($row[$column])) {
+                    throw new RuntimeException("Cannot load G2H map: Malformed row in data: $line");
+                }
+            }
+
             $h = implode('-', [
                 $row['hijri_y'],
                 $padZeroFn($row['hijri_m']),
@@ -65,6 +107,9 @@ class MaldivesG2HConverter implements GregorianToHijriConverter
                 $padZeroFn($row['gregorian_d'])
             ]);
             $result[$h] = $g;
+        }
+        if (empty($result)) {
+            throw new RuntimeException("Cannot load G2H map: No data rows found in $this->dataUrl");
         }
         ksort($result);
         return $result;
