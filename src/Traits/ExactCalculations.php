@@ -17,8 +17,7 @@ trait ExactCalculations
         if ($daysToAdd < 0)
             return $this->subDaysExact(abs($daysToAdd));
 
-        $gregorian = $this->getGregorianDate();
-        $gregorian->addDays($daysToAdd);
+        $gregorian = $this->getGregorianDate()->copy()->addDays($daysToAdd);
         $newHijri = self::createFromGregorian($gregorian);
         $this->setYear($newHijri->getYear());
         $this->setMonth($newHijri->getMonth());
@@ -38,8 +37,7 @@ trait ExactCalculations
         if ($daysToSubtract < 0)
             return $this->addDaysExact(abs($daysToSubtract));
 
-        $gregorian = $this->getGregorianDate();
-        $gregorian->subDays($daysToSubtract);
+        $gregorian = $this->getGregorianDate()->copy()->subDays($daysToSubtract);
         $newHijri = self::createFromGregorian($gregorian);
         $this->setYear($newHijri->getYear());
         $this->setMonth($newHijri->getMonth());
